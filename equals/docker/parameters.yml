@@ -1,9 +1,9 @@
 # This file is auto-generated during the composer install
 parameters:
     database_host: db
-    database_name: symfony-admin-starter-kit
-    database_user: symfony-admin-starter-kit
-    database_password: symfony-admin-starter-kit
+    database_name: equals
+    database_user: lautaro
+    database_password: lautaro
     database_port: null
     mailer_transport: smtp
     mailer_host: 127.0.0.1
