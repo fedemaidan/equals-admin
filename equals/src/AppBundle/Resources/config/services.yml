@@ -1,0 +1,12 @@
+services:
+    app.admin.producto:
+        class: AppBundle\Admin\ProductoAdmin
+        arguments: [~, AppBundle\Entity\Producto, SonataAdminBundle:CRUD]
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: admin, label: Producto }
+
+    app.admin.lote:
+        class: AppBundle\Admin\LoteAdmin
+        arguments: [~, AppBundle\Entity\Lote, SonataAdminBundle:CRUD]
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: admin, label: Lote }

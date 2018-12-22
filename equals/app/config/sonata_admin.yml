@@ -1,0 +1,31 @@
+sonata_admin:
+    title:      Equals Stock
+    title_logo: favicon.ico
+    security:
+        handler: sonata.admin.security.handler.role
+        information:
+            LIST: LIST
+            SHOW: SHOW
+            EDIT: EDIT
+            CREATE: CREATE
+            DELETE: DELETE
+            OPERATOR: OPERATOR
+            EXPORT: EXPORT
+            MASTER: MASTER
+#        short_object_description: AppBundle:Admin:short-object-description.html.twig
+    options:
+        html5_validate:       true
+        confirm_exit:         false
+    dashboard:
+        groups:
+            Gestión:
+                items:
+                    - app.admin.producto
+                    - app.admin.lote
+            users_administration:
+                label: Usuarios
+                label_catalogue: messages
+                icon: '<fa class="fa fa-users"></fa>'
+                items:
+                    - sonata.user.admin.user
+                    - sonata.user.admin.group
