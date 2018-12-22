@@ -8,7 +8,7 @@ services:
       - "9060:9060"
     volumes:
       - ./docker/parameters.yml:/server/app/config/parameters.yml:rw
-      - ./:/server:rw
+      #- ./:/server:rw
   db:
     image: mysql:5.7
     volumes:
