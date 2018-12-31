@@ -10,3 +10,24 @@ services:
         arguments: [~, AppBundle\Entity\Lote, SonataAdminBundle:CRUD]
         tags:
             - { name: sonata.admin, manager_type: orm, group: admin, label: Lote }
+
+    app.admin.proveedor:
+        class: AppBundle\Admin\ProveedorAdmin
+        arguments: [~, AppBundle\Entity\Proveedor, Sonata\AdminBundle\Controller\CRUDController]
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: admin, label: Proveedor }
+        public: true
+
+    app.admin.compra:
+        class: AppBundle\Admin\CompraAdmin
+        arguments: [~, AppBundle\Entity\Compra, Sonata\AdminBundle\Controller\CRUDController]
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: admin, label: Compra }
+        public: true
+
+    app.admin.cliente:
+        class: AppBundle\Admin\ClienteAdmin
+        arguments: [~, AppBundle\Entity\Cliente, Sonata\AdminBundle\Controller\CRUDController]
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: admin, label: Cliente }
+        public: true

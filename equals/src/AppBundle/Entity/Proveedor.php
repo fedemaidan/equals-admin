@@ -5,13 +5,16 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Producto
+ * Proveedor
  *
- * @ORM\Table(name="producto")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\ProductoRepository")
+ * @ORM\Table(name="proveedor")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\ProveedorRepository")
  */
-class Producto
+class Proveedor
 {
+
+    use \AppBundle\Traits\DatosContactoPersonalTrait;
+
     /**
      * @var int
      *
@@ -31,15 +34,10 @@ class Producto
     /**
      * @var string
      *
-     * @ORM\Column(name="codigo", type="string", length=255, unique=true)
+     * @ORM\Column(name="direccion", type="string", length=255, nullable=true)
      */
-    private $codigo;
+    private $direccion;
 
-    /**
-     * @var Lote
-     * @ORM\OneToMany(targetEntity="Lote", mappedBy="producto")
-     */
-    private $lotes;
 
     /**
      * Get id
@@ -56,7 +54,7 @@ class Producto
      *
      * @param string $nombre
      *
-     * @return Producto
+     * @return Proveedor
      */
     public function setNombre($nombre)
     {
@@ -75,32 +73,33 @@ class Producto
         return $this->nombre;
     }
 
+    
     /**
-     * Set codigo
+     * Set direccion
      *
-     * @param string $codigo
+     * @param string $direccion
      *
-     * @return Producto
+     * @return Proveedor
      */
-    public function setCodigo($codigo)
+    public function setDireccion($direccion)
     {
-        $this->codigo = $codigo;
+        $this->direccion = $direccion;
 
         return $this;
     }
 
     /**
-     * Get codigo
+     * Get direccion
      *
      * @return string
      */
-    public function getCodigo()
+    public function getDireccion()
     {
-        return $this->codigo;
+        return $this->direccion;
     }
 
-     public function __toString()
+    public function __toString()
     {
-        return $this->getNombre().'-'.$this->getCodigo();
+        return strval($this->getNombre());
     }
 }

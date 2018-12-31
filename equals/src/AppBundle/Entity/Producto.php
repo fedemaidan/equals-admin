@@ -35,7 +35,11 @@ class Producto
      */
     private $codigo;
 
-    
+    /**
+     * @var Lote
+     * @ORM\OneToMany(targetEntity="Lote", mappedBy="producto")
+     */
+    private $lotes;
 
     /**
      * Get id
@@ -98,5 +102,46 @@ class Producto
      public function __toString()
     {
         return $this->getNombre().'-'.$this->getCodigo();
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->lotes = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add lote
+     *
+     * @param \AppBundle\Entity\Lote $lote
+     *
+     * @return Producto
+     */
+    public function addLote(\AppBundle\Entity\Lote $lote)
+    {
+        $this->lotes[] = $lote;
+
+        return $this;
+    }
+
+    /**
+     * Remove lote
+     *
+     * @param \AppBundle\Entity\Lote $lote
+     */
+    public function removeLote(\AppBundle\Entity\Lote $lote)
+    {
+        $this->lotes->removeElement($lote);
+    }
+
+    /**
+     * Get lotes
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getLotes()
+    {
+        return $this->lotes;
     }
 }

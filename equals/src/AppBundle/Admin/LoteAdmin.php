@@ -10,6 +10,8 @@ use Sonata\AdminBundle\Show\ShowMapper;
 
 class LoteAdmin extends AbstractAdmin
 {
+    use \AppBundle\Traits\LoteTrait;
+
     /**
      * @param DatagridMapper $datagridMapper
      */
@@ -18,7 +20,10 @@ class LoteAdmin extends AbstractAdmin
         $datagridMapper
             ->add('id')
             ->add('numero')
-            ->add('cantidad')
+            ->add('cantidadInicial')
+            ->add('cantidadDisponible')
+            ->add('costo')
+            ->add('producto')
         ;
     }
 
@@ -31,7 +36,8 @@ class LoteAdmin extends AbstractAdmin
             ->add('id')
             ->add('numero')
             ->add('producto')
-            ->add('cantidad', null, ['editable' => true])
+            ->add('cantidadInicial')
+            ->add('cantidadDisponible')
             ->add('_action', null, array(
                 'label' => 'Acciones',
                 'actions' => array(
@@ -48,10 +54,22 @@ class LoteAdmin extends AbstractAdmin
      */
     protected function configureFormFields(FormMapper $formMapper)
     {
+        $subject = $this->getSubject();
+
+        if ($subject->getId() !== null) {
+                $formMapper->add('numero');
+        }
+
         $formMapper
-            ->add('numero')
             ->add('producto')
-            ->add('cantidad')
+            ->add('cantidadInicial');
+
+        if ($subject->getId() !== null) {
+            $formMapper->add('cantidadDisponible');
+        }
+        $formMapper
+            ->add('costo')
+            ->add('compra')
         ;
     }
 
@@ -63,7 +81,17 @@ class LoteAdmin extends AbstractAdmin
         $showMapper
             ->add('id')
             ->add('numero')
-            ->add('cantidad')
+            ->add('cantidadInicial')
+            ->add('cantidadDisponible')
+            ->add('costo')
+            ->add('producto')
+            ->add('compra')
         ;
+    }
+
+    public function postPersist($lote)
+    {
+        $lote = $this->postLotePersist($lote);
+        $this->update($lote);
     }
 }

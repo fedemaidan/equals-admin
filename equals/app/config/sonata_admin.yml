@@ -1,6 +1,7 @@
 sonata_admin:
-    title:      Equals Stock
-    title_logo: favicon.ico
+    title:      Gestión Stock
+    title_logo: LogoEquals.png
+    show_mosaic_button: false
     security:
         handler: sonata.admin.security.handler.role
         information:
@@ -22,6 +23,9 @@ sonata_admin:
                 items:
                     - app.admin.producto
                     - app.admin.lote
+                    - app.admin.proveedor
+                    - app.admin.compra
+                    - app.admin.cliente
             users_administration:
                 label: Usuarios
                 label_catalogue: messages

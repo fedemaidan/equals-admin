@@ -22,18 +22,32 @@ class Lote
     private $id;
 
     /**
-     * @var int
+     * @var string
      *
-     * @ORM\Column(name="numero", type="integer", unique=true)
+     * @ORM\Column(name="numero", type="string", length=255, nullable=true, unique=true)
      */
     private $numero;
 
     /**
      * @var int
      *
-     * @ORM\Column(name="cantidad", type="integer")
+     * @ORM\Column(name="cantidadInicial", type="integer")
      */
-    private $cantidad;
+    private $cantidadInicial;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="cantidadDisponible", type="integer", nullable=true)
+     */
+    private $cantidadDisponible;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="costo", type="decimal",  precision=7, scale=2, nullable=true)
+     */
+    private $costo;
 
     /**
      * @var Producto
@@ -42,6 +56,12 @@ class Lote
      */
     private $producto;
 
+    /**
+     * @var Compra
+     * @ORM\ManyToOne(targetEntity="Compra")
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $compra;
 
 
     /**
@@ -57,7 +77,7 @@ class Lote
     /**
      * Set numero
      *
-     * @param integer $numero
+     * @param string $numero
      *
      * @return Lote
      */
@@ -71,37 +91,14 @@ class Lote
     /**
      * Get numero
      *
-     * @return int
+     * @return string
      */
     public function getNumero()
     {
         return $this->numero;
     }
 
-    /**
-     * Set cantidad
-     *
-     * @param integer $cantidad
-     *
-     * @return Lote
-     */
-    public function setCantidad($cantidad)
-    {
-        $this->cantidad = $cantidad;
-
-        return $this;
-    }
-
-    /**
-     * Get cantidad
-     *
-     * @return int
-     */
-    public function getCantidad()
-    {
-        return $this->cantidad;
-    }
-
+    
     /**
      * Set producto
      *
@@ -128,6 +125,105 @@ class Lote
 
     public function __toString()
     {
-        return $this->getNumero().'-'.$this->getProducto()->getNombre();
+        if ($this->getProducto())
+            return $this->getNumero().'-'.$this->getProducto()->getNombre();
+        else 
+            return strval($this->getNumero());
+    }
+
+    /**
+     * Set cantidadInicial
+     *
+     * @param integer $cantidadInicial
+     *
+     * @return Lote
+     */
+    public function setCantidadInicial($cantidadInicial)
+    {
+        $this->cantidadInicial = $cantidadInicial;
+
+        return $this;
+    }
+
+    /**
+     * Get cantidadInicial
+     *
+     * @return integer
+     */
+    public function getCantidadInicial()
+    {
+        return $this->cantidadInicial;
+    }
+
+    /**
+     * Set cantidadDisponible
+     *
+     * @param integer $cantidadDisponible
+     *
+     * @return Lote
+     */
+    public function setCantidadDisponible($cantidadDisponible)
+    {
+        $this->cantidadDisponible = $cantidadDisponible;
+
+        return $this;
+    }
+
+    /**
+     * Get cantidadDisponible
+     *
+     * @return integer
+     */
+    public function getCantidadDisponible()
+    {
+        return $this->cantidadDisponible;
+    }
+
+    /**
+     * Set costo
+     *
+     * @param string $costo
+     *
+     * @return Lote
+     */
+    public function setCosto($costo)
+    {
+        $this->costo = $costo;
+
+        return $this;
+    }
+
+    /**
+     * Get costo
+     *
+     * @return string
+     */
+    public function getCosto()
+    {
+        return $this->costo;
+    }
+
+    /**
+     * Set compra
+     *
+     * @param \AppBundle\Entity\Compra $compra
+     *
+     * @return Lote
+     */
+    public function setCompra(\AppBundle\Entity\Compra $compra = null)
+    {
+        $this->compra = $compra;
+
+        return $this;
+    }
+
+    /**
+     * Get compra
+     *
+     * @return \AppBundle\Entity\Compra
+     */
+    public function getCompra()
+    {
+        return $this->compra;
     }
 }

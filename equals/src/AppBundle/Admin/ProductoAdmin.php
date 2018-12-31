@@ -31,6 +31,8 @@ class ProductoAdmin extends AbstractAdmin
             ->add('id')
             ->add('nombre')
             ->add('codigo')
+            //->add('disponible')
+            //->add('reservado')
             ->add('_action', null, array(
                 'actions' => array(
                     'show' => array(),
@@ -61,6 +63,7 @@ class ProductoAdmin extends AbstractAdmin
             ->add('id')
             ->add('nombre')
             ->add('codigo')
+            ->add('lotes')
         ;
     }
 }
