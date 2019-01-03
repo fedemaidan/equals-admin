@@ -38,7 +38,7 @@ class Lote
     /**
      * @var int
      *
-     * @ORM\Column(name="cantidadDisponible", type="decimal",  precision=7, scale=2, nullable=false)
+     * @ORM\Column(name="cantidadDisponible", type="decimal",  precision=7, scale=2, nullable=true)
      */
     private $cantidadDisponible;
 
