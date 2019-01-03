@@ -31,14 +31,14 @@ class Lote
     /**
      * @var int
      *
-     * @ORM\Column(name="cantidadInicial", type="integer")
+     * @ORM\Column(name="cantidadInicial", type="decimal",  precision=7, scale=2, nullable=false)
      */
     private $cantidadInicial;
 
     /**
      * @var int
      *
-     * @ORM\Column(name="cantidadDisponible", type="integer", nullable=true)
+     * @ORM\Column(name="cantidadDisponible", type="decimal",  precision=7, scale=2, nullable=false)
      */
     private $cantidadDisponible;
 
@@ -63,6 +63,12 @@ class Lote
      */
     private $compra;
 
+    /**
+     * @var Fabricacion
+     * @ORM\ManyToOne(targetEntity="Fabricacion")
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $fabricacion;
 
     /**
      * Get id
@@ -225,5 +231,29 @@ class Lote
     public function getCompra()
     {
         return $this->compra;
+    }
+
+    /**
+     * Set fabricacion
+     *
+     * @param \AppBundle\Entity\Fabricacion $fabricacion
+     *
+     * @return Lote
+     */
+    public function setFabricacion(\AppBundle\Entity\Fabricacion $fabricacion = null)
+    {
+        $this->fabricacion = $fabricacion;
+
+        return $this;
+    }
+
+    /**
+     * Get fabricacion
+     *
+     * @return \AppBundle\Entity\Fabricacion
+     */
+    public function getFabricacion()
+    {
+        return $this->fabricacion;
     }
 }

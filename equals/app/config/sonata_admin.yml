@@ -19,13 +19,16 @@ sonata_admin:
         confirm_exit:         false
     dashboard:
         groups:
-            Gestión:
+            Acciones:
+                items:
+                    - app.admin.compra
+            Datos:
                 items:
                     - app.admin.producto
                     - app.admin.lote
                     - app.admin.proveedor
-                    - app.admin.compra
                     - app.admin.cliente
+                    - app.admin.tipo_fabricacion
             users_administration:
                 label: Usuarios
                 label_catalogue: messages

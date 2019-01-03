@@ -5,12 +5,12 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Compra
+ * Fabricacion
  *
- * @ORM\Table(name="compra")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\CompraRepository")
+ * @ORM\Table(name="fabricacion")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\FabricacionRepository")
  */
-class Compra
+class Fabricacion
 {
     /**
      * @var int
@@ -22,17 +22,24 @@ class Compra
     private $id;
 
     /**
-     * @var Producto
-     * @ORM\ManyToOne(targetEntity="Proveedor")
+     * @var int
+     *
+     * @ORM\Column(name="cantidad", type="decimal",  precision=7, scale=2, nullable=false)
      */
-    private $proveedor;
+    private $cantidad;
+
+    /**
+     * @var TipoFabricacion
+     * @ORM\ManyToOne(targetEntity="TipoFabricacion")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $tipoFabricacion;
 
     /**
      * @var Lote
      * @ORM\OneToMany(targetEntity="Lote", mappedBy="compra",cascade={"persist"})
      */
     private $lotes;
-
 
     /**
      * Get id
@@ -43,6 +50,30 @@ class Compra
     {
         return $this->id;
     }
+
+    /**
+     * Set cantidad
+     *
+     * @param float $cantidad
+     *
+     * @return Fabricacion
+     */
+    public function setCantidad($cantidad)
+    {
+        $this->cantidad = $cantidad;
+
+        return $this;
+    }
+
+    /**
+     * Get cantidad
+     *
+     * @return float
+     */
+    public function getCantidad()
+    {
+        return $this->cantidad;
+    }
     /**
      * Constructor
      */
@@ -52,27 +83,27 @@ class Compra
     }
 
     /**
-     * Set proveedor
+     * Set tipoFabricacion
      *
-     * @param \AppBundle\Entity\Proveedor $proveedor
+     * @param \AppBundle\Entity\TipoFabricacion $tipoFabricacion
      *
-     * @return Compra
+     * @return Fabricacion
      */
-    public function setProveedor(\AppBundle\Entity\Proveedor $proveedor = null)
+    public function setTipoFabricacion(\AppBundle\Entity\TipoFabricacion $tipoFabricacion)
     {
-        $this->proveedor = $proveedor;
+        $this->tipoFabricacion = $tipoFabricacion;
 
         return $this;
     }
 
     /**
-     * Get proveedor
+     * Get tipoFabricacion
      *
-     * @return \AppBundle\Entity\Proveedor
+     * @return \AppBundle\Entity\TipoFabricacion
      */
-    public function getProveedor()
+    public function getTipoFabricacion()
     {
-        return $this->proveedor;
+        return $this->tipoFabricacion;
     }
 
     /**
@@ -80,7 +111,7 @@ class Compra
      *
      * @param \AppBundle\Entity\Lote $lote
      *
-     * @return Compra
+     * @return Fabricacion
      */
     public function addLote(\AppBundle\Entity\Lote $lote)
     {
@@ -107,10 +138,5 @@ class Compra
     public function getLotes()
     {
         return $this->lotes;
-    }
-
-    public function __toString()
-    {
-        return $this->getId().'-'.$this->getProveedor()->getNombre();
     }
 }
