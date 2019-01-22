@@ -7,13 +7,27 @@ RUN apt-get update \
  && apt-get install \
         git \
         unzip \
+        zlib1g-dev \
         curl \
         --assume-yes \
         --no-install-recommends \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
+
+
+RUN apt-get update && apt-get install -y \
+        libfreetype6-dev \
+        libjpeg62-turbo-dev \
+        libmcrypt-dev \
+        libpng12-dev \
+    && docker-php-ext-install -j$(nproc) iconv mcrypt \
+    && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
+    && docker-php-ext-install -j$(nproc) gd
+
 RUN docker-php-ext-install pdo_mysql;
+RUN docker-php-ext-install zip;
+
 
 RUN gpg --keyserver pool.sks-keyservers.net --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4
 RUN curl -o /usr/local/bin/gosu -SL "https://github.com/tianon/gosu/releases/download/1.6/gosu-$(dpkg --print-architecture)" \
@@ -32,7 +46,7 @@ COPY ./composer.lock /server/composer.lock
 COPY ./app/AppKernel.php /server/app/AppKernel.php
 COPY ./app/AppCache.php /server/app/AppCache.php
 
-RUN composer install --optimize-autoloader --no-scripts
+#RUN composer install --optimize-autoloader --no-scripts
 
 COPY . /server
 

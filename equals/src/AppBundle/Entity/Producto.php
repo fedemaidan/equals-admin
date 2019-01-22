@@ -144,4 +144,20 @@ class Producto
     {
         return $this->lotes;
     }
+
+    public function getCantidadDisponible() {
+        $cantidad = 0;
+        foreach ($this->lotes as $key => $lote) {
+            $cantidad += $lote->getCantidadDisponible();
+        }
+        return $cantidad;
+    }
+
+    public function getCantidadReservada() {
+        $cantidad = 0;
+        foreach ($this->lotes as $key => $lote) {
+            $cantidad += $lote->getCantidadReservada();
+        }
+        return $cantidad;
+    }
 }

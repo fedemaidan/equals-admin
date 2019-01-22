@@ -43,6 +43,13 @@ class Lote
     private $cantidadDisponible;
 
     /**
+     * @var int
+     *
+     * @ORM\Column(name="cantidadReservada", type="decimal",  precision=7, scale=2, nullable=true)
+     */
+    private $cantidadReservada;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="costo", type="decimal",  precision=7, scale=2, nullable=true)
@@ -69,6 +76,13 @@ class Lote
      * @ORM\JoinColumn(nullable=true)
      */
     private $fabricacion;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="fecha", type="datetime", nullable=true)
+     */
+    private $fecha;
 
     /**
      * Get id
@@ -255,5 +269,68 @@ class Lote
     public function getFabricacion()
     {
         return $this->fabricacion;
+    }
+
+    /**
+     * Set cantidadReservada
+     *
+     * @param string $cantidadReservada
+     *
+     * @return Lote
+     */
+    public function setCantidadReservada($cantidadReservada)
+    {
+        $this->cantidadReservada = $cantidadReservada;
+
+        return $this;
+    }
+
+    /**
+     * Get cantidadReservada
+     *
+     * @return string
+     */
+    public function getCantidadReservada()
+    {
+        return $this->cantidadReservada;
+    }
+
+    /**
+     * Set fecha
+     *
+     * @param \DateTime $fecha
+     *
+     * @return Lote
+     */
+    public function setFecha($fecha)
+    {
+        $this->fecha = $fecha;
+
+        return $this;
+    }
+
+    /**
+     * Get fecha
+     *
+     * @return \DateTime
+     */
+    public function getFecha()
+    {
+        return $this->fecha;
+    }
+
+    public function reservar($cantidad) {
+        if ($this->getCantidadDisponible() <= $cantidad) {
+            $this->setCantidadReservada($this->getCantidadReservada() + $this->getCantidadDisponible());
+            $cantidad -= $this->getCantidadDisponible();
+            $this->setCantidadDisponible(0);
+        }
+        else  {
+            $this->setCantidadDisponible($this->getCantidadDisponible() - $cantidad);
+            $this->setCantidadReservada($this->getCantidadReservada() + $cantidad);
+            $cantidad = 0;
+        }
+
+        return $cantidad;
     }
 }

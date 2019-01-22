@@ -1,11 +1,11 @@
 <?php
 namespace AppBundle\Form;
-use AppBundle\Entity\Ingrediente;
+use AppBundle\Entity\ItemRemito;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class IngredienteType extends AbstractType
+class ItemRemitoType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -17,7 +17,7 @@ class IngredienteType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => Ingrediente::class,
+            'data_class' => ItemRemito::class,
         ]);
     }
 }

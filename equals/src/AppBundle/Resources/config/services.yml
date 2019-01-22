@@ -1,4 +1,9 @@
 services:
+    adminLotes_service:
+        class:     AppBundle\Service\AdminLotesService
+        arguments:
+            { container: @service_container, entityManager: "@doctrine.orm.entity_manager" }
+
     app.admin.producto:
         class: AppBundle\Admin\ProductoAdmin
         arguments: [~, AppBundle\Entity\Producto, SonataAdminBundle:CRUD]
@@ -37,4 +42,11 @@ services:
         arguments: [~, AppBundle\Entity\TipoFabricacion, Sonata\AdminBundle\Controller\CRUDController]
         tags:
             - { name: sonata.admin, manager_type: orm, group: admin, label: TipoFabricacion }
+        public: true
+
+    app.admin.remito:
+        class: AppBundle\Admin\RemitoAdmin
+        arguments: [~, AppBundle\Entity\Remito, AppBundle:RemitoCRUD]
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: admin, label: Remito }
         public: true

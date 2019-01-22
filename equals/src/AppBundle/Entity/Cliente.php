@@ -158,4 +158,9 @@ class Cliente
     {
         return $this->cuit;
     }
+
+    public function __toString()
+    {
+        return strval($this->getNombre());
+    }
 }

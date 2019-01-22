@@ -37,7 +37,7 @@ class Fabricacion
 
     /**
      * @var Lote
-     * @ORM\OneToMany(targetEntity="Lote", mappedBy="compra",cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="Lote", mappedBy="fabricacion",cascade={"persist"})
      */
     private $lotes;
 
