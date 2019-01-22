@@ -113,4 +113,23 @@ class Compra
     {
         return $this->getId().'-'.$this->getProveedor();
     }
+
+    public function getCosto() {
+        $costo = 0;
+
+        foreach ($this->getLotes() as $key => $lote) {
+            $costo += $lote->getCosto();
+        }
+
+        return $costo;
+    }
+
+    public function getItemsHtml() {
+        $aux = '';
+        foreach ($this->getLotes() as $key => $lote) {
+            $aux .= $lote->getProducto()->getNombre()." ".$lote->getCantidadInicial()." kilos<br>";
+        }
+
+        return $aux;
+    }
 }

@@ -9,7 +9,7 @@ use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Show\ShowMapper;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use AppBundle\Form\IngredienteType;
-class TipoFabricacionAdmin extends AbstractAdmin
+class FormulaEnzimaticaAdmin extends AbstractAdmin
 {
     protected function configureDatagridFilters(DatagridMapper $datagridMapper)
     {
@@ -62,17 +62,17 @@ class TipoFabricacionAdmin extends AbstractAdmin
         ;
     }
 
-    public function prePersist($tipoFabricacion)
+    public function prePersist($formula)
     {
-        foreach ($tipoFabricacion->getIngredientes() as $ingrediente) {
-            $ingrediente->setTipoFabricacion($tipoFabricacion); 
+        foreach ($formula->getIngredientes() as $ingrediente) {
+            $ingrediente->setFormulaEnzimatica($formula); 
         }
     }
     
-    public function preUpdate($tipoFabricacion)
+    public function preUpdate($formula)
     {
-        foreach ($tipoFabricacion->getIngredientes() as $ingrediente) {
-            $ingrediente->setTipoFabricacion($tipoFabricacion);   
+        foreach ($formula->getIngredientes() as $ingrediente) {
+            $ingrediente->setFormulaEnzimatica($formula);   
         }
     }
 }

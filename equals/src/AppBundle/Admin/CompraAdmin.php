@@ -27,6 +27,8 @@ class CompraAdmin extends AbstractAdmin
         $listMapper
             ->add('id')
             ->add('proveedor')
+            ->add('getCosto','integer',['label' => "Costo"])
+            ->add('getItemsHtml','html',['label' => "Items"])
             ->add('_action', null, [
                 'actions' => [
                     'show' => [],

@@ -5,12 +5,12 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * TipoFabricacion
+ * FormulaEnzimatica
  *
- * @ORM\Table(name="tipo_fabricacion")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\TipoFabricacionRepository")
+ * @ORM\Table(name="formula_enzimatica")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\FormulaEnzimaticaRepository")
  */
-class TipoFabricacion
+class FormulaEnzimatica
 {
     /**
      * @var int
@@ -30,7 +30,7 @@ class TipoFabricacion
 
     /**
      * @var Lote
-     * @ORM\OneToMany(targetEntity="Ingrediente", mappedBy="tipoFabricacion",cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="Ingrediente", mappedBy="formulaEnzimatica",cascade={"persist"})
      */
     private $ingredientes;
 
@@ -57,7 +57,7 @@ class TipoFabricacion
      *
      * @param string $nombre
      *
-     * @return TipoFabricacion
+     * @return FormulaEnzimatica
      */
     public function setNombre($nombre)
     {
@@ -88,7 +88,7 @@ class TipoFabricacion
      *
      * @param \AppBundle\Entity\Ingrediente $ingrediente
      *
-     * @return TipoFabricacion
+     * @return FormulaEnzimatica
      */
     public function addIngrediente(\AppBundle\Entity\Ingrediente $ingrediente)
     {
@@ -122,7 +122,7 @@ class TipoFabricacion
      *
      * @param \AppBundle\Entity\Producto $productoResultante
      *
-     * @return TipoFabricacion
+     * @return FormulaEnzimatica
      */
     public function setProductoResultante(\AppBundle\Entity\Producto $productoResultante = null)
     {

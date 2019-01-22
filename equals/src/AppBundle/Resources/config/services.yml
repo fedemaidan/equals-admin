@@ -37,11 +37,11 @@ services:
             - { name: sonata.admin, manager_type: orm, group: admin, label: Cliente }
         public: true
 
-    app.admin.tipo_fabricacion:
-        class: AppBundle\Admin\TipoFabricacionAdmin
-        arguments: [~, AppBundle\Entity\TipoFabricacion, Sonata\AdminBundle\Controller\CRUDController]
+    app.admin.formula_enzimatica:
+        class: AppBundle\Admin\FormulaEnzimaticaAdmin
+        arguments: [~, AppBundle\Entity\FormulaEnzimatica, Sonata\AdminBundle\Controller\CRUDController]
         tags:
-            - { name: sonata.admin, manager_type: orm, group: admin, label: TipoFabricacion }
+            - { name: sonata.admin, manager_type: orm, group: admin, label: FormulaEnzimatica }
         public: true
 
     app.admin.remito:

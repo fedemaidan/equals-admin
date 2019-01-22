@@ -36,11 +36,11 @@ class Ingrediente
     private $producto;
 
     /**
-     * @var TipoFabricacion
-     * @ORM\ManyToOne(targetEntity="TipoFabricacion")
+     * @var FormulaEnzimatica
+     * @ORM\ManyToOne(targetEntity="FormulaEnzimatica")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $tipoFabricacion;
+    private $formulaEnzimatica;
 
 
     /**
@@ -102,51 +102,27 @@ class Ingrediente
     }
 
     /**
-     * Set compra
+     * Set formulaEnzimatica
      *
-     * @param \AppBundle\Entity\TipoFabricacion $compra
+     * @param \AppBundle\Entity\FormulaEnzimatica $formulaEnzimatica
      *
      * @return Ingrediente
      */
-    public function setCompra(\AppBundle\Entity\TipoFabricacion $compra)
+    public function setFormulaEnzimatica(\AppBundle\Entity\FormulaEnzimatica $formulaEnzimatica)
     {
-        $this->compra = $compra;
+        $this->formulaEnzimatica = $formulaEnzimatica;
 
         return $this;
     }
 
     /**
-     * Get compra
+     * Get formulaEnzimatica
      *
-     * @return \AppBundle\Entity\TipoFabricacion
+     * @return \AppBundle\Entity\FormulaEnzimatica
      */
-    public function getCompra()
+    public function getFormulaEnzimatica()
     {
-        return $this->compra;
-    }
-
-    /**
-     * Set tipoFabricacion
-     *
-     * @param \AppBundle\Entity\TipoFabricacion $tipoFabricacion
-     *
-     * @return Ingrediente
-     */
-    public function setTipoFabricacion(\AppBundle\Entity\TipoFabricacion $tipoFabricacion)
-    {
-        $this->tipoFabricacion = $tipoFabricacion;
-
-        return $this;
-    }
-
-    /**
-     * Get tipoFabricacion
-     *
-     * @return \AppBundle\Entity\TipoFabricacion
-     */
-    public function getTipoFabricacion()
-    {
-        return $this->tipoFabricacion;
+        return $this->formulaEnzimatica;
     }
 
     public function __toString()
