@@ -53,9 +53,15 @@ COPY . /server
 RUN rm -rf /usr/local/etc/php-fpm.d/*
 COPY ./docker/php-fpm/www.conf /usr/local/etc/php-fpm.d/www.conf
 
-RUN mkdir ./app/cache ./app/cache/dev ./app/cache/prod ./app/logs \
- && chown www-data:www-data -R ./ \
- && chmod 777 -R ./app/cache ./app/logs 
+#RUN mkdir ./app/cache ./app/cache/dev ./app/cache/prod ./app/logs \
+# && chown www-data:www-data -R ./ \
+# && chmod 777 -R ./app/cache ./app/logs 
+
+
+RUN mkdir app/cache app/cache/dev app/cache/prod app/logs \
+ && chown www-data:www-data -R . \
+ && chmod 777 -R app/cache app/logs 
+
 
 VOLUME ["/var/log/php", "/server"]
 
