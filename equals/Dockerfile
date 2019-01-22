@@ -46,7 +46,7 @@ COPY ./composer.lock /server/composer.lock
 COPY ./app/AppKernel.php /server/app/AppKernel.php
 COPY ./app/AppCache.php /server/app/AppCache.php
 
-#RUN composer install --optimize-autoloader --no-scripts
+RUN composer install --optimize-autoloader --no-scripts
 
 COPY . /server
 
