@@ -23,7 +23,9 @@ class RemitoCRUDController extends Controller
 
         if ($remito->getEstado() == Remito::Pendiente) {
             $remito->setEstado(Remito::Vendido);
+            $this->container->get('adminLotes_service')->limpiarReservados($remito);
             $em = $this->getDoctrine()->getManager();
+
             $em->persist($remito);
             $em->flush();                
         }
@@ -36,7 +38,7 @@ class RemitoCRUDController extends Controller
         $em = $this->getDoctrine()->getManager();
         $remito = $this->admin->getSubject();
         foreach ($remito->getFaltantes() as $key => $faltante) {
-            $cantidad = $this->container->get('adminLotes_service')->reservarLotesMasAntiguos($faltante->getProducto(), $faltante->getCantidad());
+            $cantidad = $this->container->get('adminLotes_service')->reservarLotesMasAntiguos($faltante->getProducto(), $faltante->getCantidad(), $remito);
 
             if ($cantidad == 0) {
                 $remito->removeFaltante($faltante);
@@ -61,8 +63,6 @@ class RemitoCRUDController extends Controller
         $doc = $remito->imprimir();
         $filename = "Remito-".$remito->getId().".xlsx";
          
-        //$doc->save('php://output');
-
         $response =  new StreamedResponse(
             function () use ($doc) {
                 $doc->save('php://output');

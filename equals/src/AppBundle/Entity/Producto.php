@@ -36,6 +36,13 @@ class Producto
     private $codigo;
 
     /**
+     * @var int
+     *
+     * @ORM\Column(name="kilosPorBolsa", type="decimal",  precision=7, scale=2, nullable=false)
+     */
+    private $kilosPorBolsa;
+
+    /**
      * @var Lote
      * @ORM\OneToMany(targetEntity="Lote", mappedBy="producto")
      */
@@ -159,5 +166,29 @@ class Producto
             $cantidad += $lote->getCantidadReservada();
         }
         return $cantidad;
+    }
+
+    /**
+     * Set kilosPorBolsa
+     *
+     * @param string $kilosPorBolsa
+     *
+     * @return Producto
+     */
+    public function setKilosPorBolsa($kilosPorBolsa)
+    {
+        $this->kilosPorBolsa = $kilosPorBolsa;
+
+        return $this;
+    }
+
+    /**
+     * Get kilosPorBolsa
+     *
+     * @return string
+     */
+    public function getKilosPorBolsa()
+    {
+        return $this->kilosPorBolsa;
     }
 }

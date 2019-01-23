@@ -42,11 +42,15 @@ class Remito
     private $estado;
 
     /**
+    * @ORM\Column(name="ordenDeCompra", type="string", length=255, nullable=true)
+    */
+    private $ordenDeCompra;
+
+    /**
      * @var Producto
      * @ORM\ManyToOne(targetEntity="Cliente")
      */
     private $cliente;
-
 
 
     /**
@@ -54,6 +58,12 @@ class Remito
      * @ORM\OneToMany(targetEntity="LoteFaltante", mappedBy="remito",cascade={"persist"})
      */
     private $faltantes;
+
+    /**
+     * @var LoteAsignado
+     * @ORM\OneToMany(targetEntity="LoteAsignado", mappedBy="remito",cascade={"persist"})
+     */
+    private $loteAsignados;
 
     /**
      * Get id
@@ -227,5 +237,73 @@ class Remito
 
         $writer = new Xlsx($spreadsheet);
         return $writer;
+    }
+
+    /**
+     * Add loteAsignado
+     *
+     * @param \AppBundle\Entity\LoteAsignado $loteAsignado
+     *
+     * @return Remito
+     */
+    public function addLoteAsignado(\AppBundle\Entity\LoteAsignado $loteAsignado)
+    {
+        $this->loteAsignados[] = $loteAsignado;
+
+        return $this;
+    }
+
+    /**
+     * Remove loteAsignado
+     *
+     * @param \AppBundle\Entity\LoteAsignado $loteAsignado
+     */
+    public function removeLoteAsignado(\AppBundle\Entity\LoteAsignado $loteAsignado)
+    {
+        $this->loteAsignados->removeElement($loteAsignado);
+    }
+
+    /**
+     * Get loteAsignado
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getLoteAsignado()
+    {
+        return $this->loteAsignados;
+    }
+
+    /**
+     * Set ordenDeCompra
+     *
+     * @param string $ordenDeCompra
+     *
+     * @return Remito
+     */
+    public function setOrdenDeCompra($ordenDeCompra)
+    {
+        $this->ordenDeCompra = $ordenDeCompra;
+
+        return $this;
+    }
+
+    /**
+     * Get ordenDeCompra
+     *
+     * @return string
+     */
+    public function getOrdenDeCompra()
+    {
+        return $this->ordenDeCompra;
+    }
+
+    /**
+     * Get loteAsignados
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getLoteAsignados()
+    {
+        return $this->loteAsignados;
     }
 }

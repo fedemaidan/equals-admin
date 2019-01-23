@@ -51,6 +51,8 @@ class ProductoAdmin extends AbstractAdmin
         $formMapper
             ->add('nombre')
             ->add('codigo')
+            ->add('kilosPorBolsa')
+            
         ;
     }
 
@@ -63,6 +65,7 @@ class ProductoAdmin extends AbstractAdmin
             ->add('id')
             ->add('nombre')
             ->add('codigo')
+            ->add('kilosPorBolsa')
             ->add('lotes')
         ;
     }

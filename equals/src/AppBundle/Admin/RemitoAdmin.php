@@ -58,6 +58,7 @@ class RemitoAdmin extends AbstractAdmin
         $formMapper
             //->add('estado', 'choice', ['choices' => [ "pendiente" => "Pendiente", "vendido" => "Vendido"]])
             ->add('cliente')
+            ->add('ordenDeCompra')
             ->add('itemsRemito', CollectionType::class, [
                 'by_reference' => false, // Use this because of reasons
                 'allow_add' => true, // True if you want allow adding new entries to the collection
@@ -73,28 +74,29 @@ class RemitoAdmin extends AbstractAdmin
         $showMapper
             ->add('id')
             ->add('estado')
+            ->add('ordenDeCompra')
             ->add('cliente')
             ->add('faltantes')
             ->add('itemsRemito')
         ;
     }
 
-    public function prePersist($object)
+    public function prePersist($remito)
     {
-        foreach ($object->getItemsRemito() as $item) {
-            $item->setRemito($object); 
-            $cantidad = $this->getConfigurationPool()->getContainer()->get('adminLotes_service')->reservarLotesMasAntiguos($item->getProducto(), $item->getCantidad());
+        foreach ($remito->getItemsRemito() as $item) {
+            $item->setRemito($remito); 
+            $cantidad = $this->getConfigurationPool()->getContainer()->get('adminLotes_service')->reservarLotesMasAntiguos($item->getProducto(), $item->getCantidad(), $remito);
             
             if ($cantidad > 0) {
                 $faltante = new LoteFaltante();
                 $faltante->setProducto($item->getProducto());
                 $faltante->setCantidad($cantidad);
-                $faltante->setRemito($object);
-                $object->addFaltante($faltante);
-                $object->setEstado(Remito::Inconsistente);
+                $faltante->setRemito($remito);
+                $remito->addFaltante($faltante);
+                $remito->setEstado(Remito::Inconsistente);
             }
             else
-                $object->setEstado(Remito::Pendiente);
+                $remito->setEstado(Remito::Pendiente);
         }
     }
     
