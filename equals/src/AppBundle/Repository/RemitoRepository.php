@@ -10,5 +10,19 @@ namespace AppBundle\Repository;
  */
 class RemitoRepository extends \Doctrine\ORM\EntityRepository
 {
+	public function getUltimoMes()
+	{
+		$previousMonth = new \DateTime();
+	    $previousMonth->sub (new \DateInterval ('P1M'));
 
+	    $qb = $this->createQueryBuilder("r");
+	    $qb
+	        ->andWhere('r.fechaModificacion > :previousMonth')
+	        ->setParameter('previousMonth', $previousMonth )
+	        ->orderBy('r.fechaModificacion', 'DESC');
+	    ;
+	    $result = $qb->getQuery()->getResult();
+
+	    return $result;
+	}
 }

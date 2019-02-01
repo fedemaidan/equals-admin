@@ -103,6 +103,7 @@ class AdminLotesService
         $lote = new Lote();
         $lote->setCantidadInicial($fabricacion->getCantidad());
         $lote->setProducto($fabricacion->getFormulaEnzimatica()->getProductoResultante());
+        $lote->setFabricacion($fabricacion);
         $this->em->persist($lote);
         $this->em->flush();
         $this->postLotePersist($lote);

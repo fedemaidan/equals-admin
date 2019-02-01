@@ -11,6 +11,7 @@ class LoteType extends AbstractType
         $builder
             ->add('producto')
             ->add('cantidadInicial')
+            ->add('numero')
             ->add('costo')
         ;
     }

@@ -62,6 +62,12 @@ class Fabricacion
     private $faltantes;
 
     /**
+     * @var LoteFaltante
+     * @ORM\OneToMany(targetEntity="Lote", mappedBy="fabricacion",cascade={"persist"})
+     */
+    private $lote;
+
+    /**
      * @var LoteAsignado
      * @ORM\OneToMany(targetEntity="LoteAsignado", mappedBy="fabricacion",cascade={"persist"})
      */
@@ -167,5 +173,39 @@ class Fabricacion
     public function getLoteAsignados()
     {
         return $this->loteAsignados;
+    }
+
+    /**
+     * Add lote
+     *
+     * @param \AppBundle\Entity\Lote $lote
+     *
+     * @return Fabricacion
+     */
+    public function addLote(\AppBundle\Entity\Lote $lote)
+    {
+        $this->lote[] = $lote;
+
+        return $this;
+    }
+
+    /**
+     * Remove lote
+     *
+     * @param \AppBundle\Entity\Lote $lote
+     */
+    public function removeLote(\AppBundle\Entity\Lote $lote)
+    {
+        $this->lote->removeElement($lote);
+    }
+
+    /**
+     * Get lote
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getLote()
+    {
+        return $this->lote;
     }
 }

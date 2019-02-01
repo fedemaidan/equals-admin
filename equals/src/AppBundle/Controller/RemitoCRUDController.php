@@ -61,10 +61,11 @@ class RemitoCRUDController extends Controller
             }
         }
 
-        if ($success) $this->addFlash('sonata_flash_success', 'El remito se completó con éxito');
-        if ($dashboard) return new RedirectResponse('/admin/dashboard');
         $em->persist($remito);
         $em->flush();
+        
+        if ($success) $this->addFlash('sonata_flash_success', 'El remito se completó con éxito');
+        if ($dashboard) return new RedirectResponse('/admin/dashboard');
 
         return new RedirectResponse($this->admin->generateUrl('list', $this->admin->getFilterParameters()));
     }

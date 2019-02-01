@@ -10,6 +10,7 @@ use AppBundle\Entity\Fabricacion;
 use AppBundle\Entity\Producto;
 use AppBundle\Entity\Remito;
 use AppBundle\Entity\LoteFaltante;
+use AppBundle\Entity\ItemRemito;
 use Symfony\Component\HttpFoundation\Response;
 
 class DashboardController extends Controller
@@ -22,17 +23,27 @@ class DashboardController extends Controller
     public function remitosAction()
     {
     	$em = $this->getDoctrine()->getManager();
-		$remitos = $em->getRepository(Remito::class)->findBy([],["fechaModificacion" => 'DESC']);
+		$remitos = $em->getRepository(Remito::class)->getUltimoMes();
+
         $remitosArray = [];
 
         foreach ($remitos as $key => $rem) {
             $row = [];
             $row[] = $rem->getFechaModificacion()->format('Y-m-d');;
-            $row[] = $rem->getId();
+            $row[] = $rem->getNumero();
             $row[] = $rem->getCliente()->getNombre();
+            
             $accionesPosibles = $this->botonesRemito($rem);
             
             $row[] = $accionesPosibles;
+            $row[] = '<button class="details-control"><i class="glyphicon glyphicon-plus"></i></button>';
+            $items = $em->getRepository(ItemRemito::class)->findBy(['remito' => $rem]);
+            $itemsReturn = [];
+            foreach ($items as $key => $item) {
+                $itemsReturn[] = ["producto" => $item->getProducto()->getNombre(), "cantidad" => $item->getCantidad()];
+            }
+
+            $row[] = $itemsReturn;
             $remitosArray[] = $row;
         }
 
@@ -52,13 +63,13 @@ class DashboardController extends Controller
     public function fabricacionAction()
     {
     	$em = $this->getDoctrine()->getManager();
-        $fabricaciones = $em->getRepository(Fabricacion::class)->findBy([],["fechaModificacion" => 'DESC']);
+        $fabricaciones = $em->getRepository(Fabricacion::class)->getUltimoMes();
         $fabricacionesArray = [];
 
         foreach ($fabricaciones as $key => $fab) {
             $row = [];
             $row[] = $fab->getFechaModificacion()->format('Y-m-d');;
-            $row[] = $fab->getId();
+            $row[] = count($fab->getLote()) > 0 ? $fab->getLote()[0]->getNumero(): '';
             $row[] = $fab->getCantidad();
             $row[] = $fab->getFormulaEnzimatica()->getProductoResultante()->getNombre();
             $accionesPosibles = $this->botonesFabricacion($fab);

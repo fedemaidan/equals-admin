@@ -26,7 +26,7 @@ class RemitoAdmin extends AbstractAdmin
     protected function configureDatagridFilters(DatagridMapper $datagridMapper)
     {
         $datagridMapper
-            ->add('id')
+            ->add('numero')
             ->add('estado')
         ;
     }
@@ -34,7 +34,7 @@ class RemitoAdmin extends AbstractAdmin
     protected function configureListFields(ListMapper $listMapper)
     {
         $listMapper
-            ->add('id')
+            ->add('numero')
             ->add('estado')
             ->add('cliente')
             ->add('faltantes')
@@ -58,6 +58,7 @@ class RemitoAdmin extends AbstractAdmin
         }
         $formMapper
             //->add('estado', 'choice', ['choices' => [ "pendiente" => "Pendiente", "vendido" => "Vendido"]])
+            ->add('numero')
             ->add('cliente')
             ->add('ordenDeCompra')
             ->add('itemsRemito', CollectionType::class, [
@@ -74,6 +75,7 @@ class RemitoAdmin extends AbstractAdmin
     {
         $showMapper
             ->add('id')
+            ->add('numero')
             ->add('estado')
             ->add('ordenDeCompra')
             ->add('cliente')

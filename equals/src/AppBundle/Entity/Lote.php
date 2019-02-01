@@ -24,7 +24,7 @@ class Lote
     /**
      * @var string
      *
-     * @ORM\Column(name="numero", type="string", length=255, nullable=true, unique=true)
+     * @ORM\Column(name="numero", type="string", length=255, nullable=true)
      */
     private $numero;
 

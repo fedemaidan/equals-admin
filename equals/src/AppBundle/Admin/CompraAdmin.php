@@ -82,7 +82,6 @@ class CompraAdmin extends AbstractAdmin
     public function postPersist($compra)
     {
         foreach ($compra->getLotes() as $lote) {
-            $lote->setNumero('L'.$lote->getId());
             $lote->setCantidadDisponible($lote->getCantidadInicial());
             $lote->setCompra($compra);   
         }

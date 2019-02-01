@@ -32,6 +32,13 @@ class Remito
     private $id;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="numero", type="string", length=255, nullable=true, unique=true)
+     */
+    private $numero;
+
+    /**
      * @var Lote
      * @ORM\OneToMany(targetEntity="ItemRemito", mappedBy="remito",cascade={"persist"})
      */
@@ -237,5 +244,29 @@ class Remito
     public function getLoteAsignados()
     {
         return $this->loteAsignados;
+    }
+
+    /**
+     * Set numero
+     *
+     * @param string $numero
+     *
+     * @return Remito
+     */
+    public function setNumero($numero)
+    {
+        $this->numero = $numero;
+
+        return $this;
+    }
+
+    /**
+     * Get numero
+     *
+     * @return string
+     */
+    public function getNumero()
+    {
+        return $this->numero;
     }
 }
