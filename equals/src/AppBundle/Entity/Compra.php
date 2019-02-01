@@ -12,6 +12,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Compra
 {
+    use \AppBundle\Traits\TimestampableEntityTrait;
+    
     /**
      * @var int
      *

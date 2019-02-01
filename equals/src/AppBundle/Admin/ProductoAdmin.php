@@ -10,6 +10,8 @@ use Sonata\AdminBundle\Show\ShowMapper;
 
 class ProductoAdmin extends AbstractAdmin
 {
+    use \AppBundle\Traits\AdminWithOutAdminTrait;
+    
     /**
      * @param DatagridMapper $datagridMapper
      */

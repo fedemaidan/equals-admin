@@ -11,6 +11,9 @@ use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use AppBundle\Form\IngredienteType;
 class FormulaEnzimaticaAdmin extends AbstractAdmin
 {
+
+    use \AppBundle\Traits\AdminWithOutAdminTrait;
+    
     protected function configureDatagridFilters(DatagridMapper $datagridMapper)
     {
         $datagridMapper

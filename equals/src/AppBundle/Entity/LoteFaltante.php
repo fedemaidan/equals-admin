@@ -20,4 +20,28 @@ class LoteFaltante
      */
     private $producto;
 
+
+    /**
+     * Set fabricacion
+     *
+     * @param \AppBundle\Entity\Fabricacion $fabricacion
+     *
+     * @return LoteFaltante
+     */
+    public function setFabricacion(\AppBundle\Entity\Fabricacion $fabricacion = null)
+    {
+        $this->fabricacion = $fabricacion;
+
+        return $this;
+    }
+
+    /**
+     * Get fabricacion
+     *
+     * @return \AppBundle\Entity\Fabricacion
+     */
+    public function getFabricacion()
+    {
+        return $this->fabricacion;
+    }
 }

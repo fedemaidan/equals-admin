@@ -10,4 +10,5 @@ namespace AppBundle\Repository;
  */
 class RemitoRepository extends \Doctrine\ORM\EntityRepository
 {
+
 }

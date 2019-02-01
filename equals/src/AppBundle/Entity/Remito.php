@@ -16,6 +16,8 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
  */
 class Remito
 {
+    use \AppBundle\Traits\AdminLotesEstadoTrait;
+    use \AppBundle\Traits\TimestampableEntityTrait;
 
     const Pendiente = "pendiente";
     const Inconsistente = "inconsistente";
@@ -51,7 +53,6 @@ class Remito
      * @ORM\ManyToOne(targetEntity="Cliente")
      */
     private $cliente;
-
 
     /**
      * @var LoteFaltante
@@ -188,89 +189,20 @@ class Remito
         return $this->observaciones;
     }
 
-    /**
-     * Add faltante
-     *
-     * @param \AppBundle\Entity\LoteFaltante $faltante
-     *
-     * @return Remito
-     */
-    public function addFaltante(\AppBundle\Entity\LoteFaltante $faltante)
-    {
-        $this->faltantes[] = $faltante;
-
-        return $this;
-    }
-
-    /**
-     * Remove faltante
-     *
-     * @param \AppBundle\Entity\LoteFaltante $faltante
-     */
-    public function removeFaltante(\AppBundle\Entity\LoteFaltante $faltante)
-    {
-        $this->faltantes->removeElement($faltante);
-    }
-
-    /**
-     * Get faltantes
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getFaltantes()
-    {
-        return $this->faltantes;
-    }
-
     public function imprimir() {
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
-        $sheet->setCellValue('A1', 'Hello World !');
-        $sheet->setCellValue('G4', 'Fecha');
-        $sheet->setCellValue('B9', 'NOMBRE CLIENTE');
-        $sheet->setCellValue('B11', 'direccion fiscal cliente?');
+        $sheet->setCellValue('G4', $this->getFechaCreacion());
+        $sheet->setCellValue('B9', $this->getCliente()->getNombre());
+        $sheet->setCellValue('B11', $this->getCliente()->getDireccionFiscal());
         $sheet->setCellValue('B13', 'RESPONSABLE INSCRIPTO');
-        $sheet->setCellValue('F13', 'CUIT');
-        $sheet->setCellValue('C15', 'DIRECCION ENTREGA?');
-        $sheet->setCellValue('B17', 'NUMERO?');
-        $sheet->setCellValue('H17', 'OTRO NUMERO?');
+        $sheet->setCellValue('F13', $this->getCliente()->getCuit());
+        $sheet->setCellValue('C15', $this->getCliente()->getDireccionEntrega());
+        $sheet->setCellValue('B17', $this->getId());
+        $sheet->setCellValue('H17', $this->getOrdenDeCompra());
 
         $writer = new Xlsx($spreadsheet);
         return $writer;
-    }
-
-    /**
-     * Add loteAsignado
-     *
-     * @param \AppBundle\Entity\LoteAsignado $loteAsignado
-     *
-     * @return Remito
-     */
-    public function addLoteAsignado(\AppBundle\Entity\LoteAsignado $loteAsignado)
-    {
-        $this->loteAsignados[] = $loteAsignado;
-
-        return $this;
-    }
-
-    /**
-     * Remove loteAsignado
-     *
-     * @param \AppBundle\Entity\LoteAsignado $loteAsignado
-     */
-    public function removeLoteAsignado(\AppBundle\Entity\LoteAsignado $loteAsignado)
-    {
-        $this->loteAsignados->removeElement($loteAsignado);
-    }
-
-    /**
-     * Get loteAsignado
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getLoteAsignado()
-    {
-        return $this->loteAsignados;
     }
 
     /**

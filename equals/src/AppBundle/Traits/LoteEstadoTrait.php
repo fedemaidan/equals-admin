@@ -22,10 +22,16 @@ trait LoteEstadoTrait
     /**
      * @var Remito
      * @ORM\ManyToOne(targetEntity="Remito")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $remito;
 
+    /**
+     * @var Remito
+     * @ORM\ManyToOne(targetEntity="Fabricacion")
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $fabricacion;
 
     /**
      * Get id

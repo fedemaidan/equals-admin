@@ -7,13 +7,9 @@ use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Show\ShowMapper;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Sonata\AdminBundle\Route\RouteCollection;
-use AppBundle\Form\ItemRemitoType;
-use AppBundle\Entity\Remito;
-use AppBundle\Entity\LoteFaltante;
 
-class RemitoAdmin extends AbstractAdmin
+class FabricacionAdmin extends AbstractAdmin
 {
     protected function configureRoutes(RouteCollection $collection)
     {
@@ -27,7 +23,7 @@ class RemitoAdmin extends AbstractAdmin
     {
         $datagridMapper
             ->add('id')
-            ->add('estado')
+            ->add('cantidad')
         ;
     }
 
@@ -35,15 +31,12 @@ class RemitoAdmin extends AbstractAdmin
     {
         $listMapper
             ->add('id')
+            ->add('cantidad')
             ->add('estado')
-            ->add('cliente')
-            ->add('faltantes')
-            ->add('itemsRemito')
-            ->add('fechaModificacion')
             ->add('_action', null, [
                 'actions' => [
                     'actuar' => array(
-                        'template' => 'AppBundle:RemitoCRUD:actuar.html.twig'
+                        'template' => 'AppBundle:FabricacionCRUD:actuar.html.twig'
                     ),
                     'show' => []
                 ],
@@ -53,20 +46,10 @@ class RemitoAdmin extends AbstractAdmin
 
     protected function configureFormFields(FormMapper $formMapper)
     {
-        if (!$this->isCurrentRoute('create')) {
-            $formMapper->add('estado');
-        }
         $formMapper
-            //->add('estado', 'choice', ['choices' => [ "pendiente" => "Pendiente", "vendido" => "Vendido"]])
-            ->add('cliente')
-            ->add('ordenDeCompra')
-            ->add('itemsRemito', CollectionType::class, [
-                'by_reference' => false, // Use this because of reasons
-                'allow_add' => true, // True if you want allow adding new entries to the collection
-                'allow_delete' => true, // True if you want to allow deleting entries
-                'prototype' => true, // True if you want to use a custom form type
-                'entry_type' => ItemRemitoType::class, // Form type for the Entity that is being attached to the object
-            ]);
+            ->add('cantidad')
+            ->add('formulaEnzimatica')
+
         ;
     }
 
@@ -74,17 +57,16 @@ class RemitoAdmin extends AbstractAdmin
     {
         $showMapper
             ->add('id')
+            ->add('cantidad')
+            ->add('formulaEnzimatica')   
+            ->add('formulaEnzimatica.productoResultante')
             ->add('estado')
-            ->add('ordenDeCompra')
-            ->add('cliente')
             ->add('faltantes')
-            ->add('itemsRemito')
         ;
     }
 
-    public function prePersist($remito)
+    public function prePersist($fabricacion)
     {
-        $this->getConfigurationPool()->getContainer()->get('adminLotes_service')->preInitRemito($remito);
+        $this->getConfigurationPool()->getContainer()->get('adminLotes_service')->preInitFabricacion($fabricacion);
     }
-
 }

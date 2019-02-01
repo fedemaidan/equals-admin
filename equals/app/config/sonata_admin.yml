@@ -17,12 +17,15 @@ sonata_admin:
     options:
         html5_validate:       true
         confirm_exit:         false
+    templates:
+        dashboard: '@App/Dashboard/dashboard.html.twig'
     dashboard:
         groups:
             Acciones:
                 items:
                     - app.admin.compra
                     - app.admin.remito
+                    - app.admin.fabricacion
             Datos:
                 items:
                     - app.admin.producto
@@ -37,3 +40,5 @@ sonata_admin:
                 items:
                     - sonata.user.admin.user
                     - sonata.user.admin.group
+        blocks:
+            - { position: right, type: sonata.admin.block.admin_list }

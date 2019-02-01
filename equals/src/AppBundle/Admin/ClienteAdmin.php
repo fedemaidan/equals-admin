@@ -11,6 +11,7 @@ use Sonata\AdminBundle\Show\ShowMapper;
 class ClienteAdmin extends AbstractAdmin
 {
     use \AppBundle\Traits\AdminContactoPersonalTrait;
+    use \AppBundle\Traits\AdminWithOutAdminTrait;
     
     protected function configureDatagridFilters(DatagridMapper $datagridMapper)
     {

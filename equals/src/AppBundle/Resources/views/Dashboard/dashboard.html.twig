@@ -1,0 +1,194 @@
+{% extends 'SonataAdminBundle:Core:dashboard.html.twig' %}
+
+{% block content %}
+
+<div class="row">
+<div class="col-md-6" >
+
+<div style="text-align:center; margin:10px;">    
+        <a class="btn btn-info" style="width:30%;" href="{{ path('admin_app_compra_create')}}"><b>Cargar compra</b></a>    
+        <a class="btn btn-success" style="width:30%;margin:10px;" href="{{ path('admin_app_remito_create')}}"><b>Cargar remito</b></a>    
+        <a class="btn btn-warning" style="width:30%;" href="{{ path('admin_app_fabricacion_create')}}"><b>Cargar fabricacion</b></a>    
+</div>
+
+<div class="box" >
+    <div class="box-header">
+        <h3 class="box-title">Stock</h3>
+    </div>
+    <div class="box-body">
+        <table id="tableStock" class="display" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th>Kilos disponibles</th>
+                    <th>Kilos reservados</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+</div>
+
+<div class="col-md-6" >
+<div class="form-group">
+<label class="radio-inline">
+      <input type="radio" name="optradio" checked onchange="mostrar('boxFaltante')">Ver faltantes
+    </label>
+    <label class="radio-inline">
+      <input type="radio" name="optradio" onchange="mostrar('boxRemito')">Ver remitos
+    </label>
+    <label class="radio-inline">
+      <input type="radio" name="optradio" onchange="mostrar('boxFabricacion')">Ver fabricaciones
+    </label>
+</div>
+<div class="box boxSecundaria boxFaltante" >
+    <div class="box-header">
+        <h3 class="box-title">Faltantes</h3>
+    </div>
+    <div class="box-body">
+        <table id="tableFaltante" class="display" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th>Kilos</th>
+                    <th>Tipo</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+<div class="box boxSecundaria boxRemito" >
+    <div class="box-header">
+        <h3 class="box-title">Remitos</h3>
+    </div>
+    <div class="box-body">
+        <table id="tableRemito" class="display" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Ultima modificacion</th>
+                    <th>Id</th>
+                    <th>Cliente</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+<div class="box boxSecundaria boxFabricacion" >
+    <div class="box-header">
+        <h3 class="box-title">Fabricaciones</h3>
+    </div>
+    <div class="box-body">
+        <table id="tableFabricacion" class="display" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Ultima modificación</th>
+                    <th>Id</th>
+                    <th>Kilos</th>
+                    <th>Producto resultante</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+</div>
+</div>
+
+{% endblock %}
+
+{% block stylesheets %}
+    /*this will extend the parent block */
+    {{ parent() }}
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css"/>
+{% endblock %}
+
+    
+
+
+{% block javascripts %}
+{{ parent() }}
+  
+<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js" type="text/javascript"></script>
+
+<script>
+
+function mostrar(box) {
+    $(".boxSecundaria").hide();
+    $("."+box).show(900);
+}
+
+
+
+$(document).ready(function() {
+        
+    let urlStock = "{{ path('stock_list') }}"
+    let urlRemito = "{{ path('remito_list') }}"
+    let urlFabricacion = "{{ path('fabricacion_list') }}"
+    let urlFaltante = "{{ path('faltantes_list') }}"
+
+    let language = {
+        "sProcessing":     "Procesando...",
+        "sLengthMenu":     "Mostrar _MENU_ registros",
+        "sZeroRecords":    "No se encontraron resultados",
+        "sEmptyTable":     "Ningún dato disponible en esta tabla",
+        "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+        "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",
+        "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
+        "sInfoPostFix":    "",
+        "sSearch":         "Buscar:",
+        "sUrl":            "",
+        "sInfoThousands":  ",",
+        "sLoadingRecords": "Cargando...",
+        "oPaginate": {
+            "sFirst":    "Primero",
+            "sLast":     "Último",
+            "sNext":     "Siguiente",
+            "sPrevious": "Anterior"
+        },
+        "oAria": {
+            "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+            "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+        }
+    }
+
+    $('#tableStock').DataTable( {
+        "processing": true,
+        "serverSide": false,
+        "paging": false,
+        "ajax": urlStock,
+        "language": language
+    } );
+
+    $('#tableRemito').DataTable( {
+        "processing": true,
+        "serverSide": false,
+        "ajax": urlRemito,
+        "lengthMenu": [[10, 20, -1], [10, 20, "Todos"]],
+        "language": language
+    } );
+
+    $('#tableFabricacion').DataTable( {
+        "processing": true,
+        "serverSide": false,
+        "ajax": urlFabricacion,
+        "lengthMenu": [[10, 20, -1], [10, 20, "Todos"]],
+        "language": language
+    } );
+
+    $('#tableFaltante').DataTable( {
+        "processing": true,
+        "serverSide": false,
+        "ajax": urlFaltante,
+        "lengthMenu": [[10, 20, -1], [10, 20, "Todos"]],
+        "language": language
+    } );
+
+    mostrar('boxFaltante')
+} );
+</script>
+{% endblock %}
+

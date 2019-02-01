@@ -140,4 +140,9 @@ class FormulaEnzimatica
     {
         return $this->productoResultante;
     }
+
+    public function __toString()
+    {
+        return $this->getNombre().'.';
+    }
 }

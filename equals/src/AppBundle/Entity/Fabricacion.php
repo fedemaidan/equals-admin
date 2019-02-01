@@ -3,6 +3,10 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+
 
 /**
  * Fabricacion
@@ -12,6 +16,15 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Fabricacion
 {
+
+    const Pendiente = "pendiente";
+    const Inconsistente = "inconsistente";
+    const Fabricado = "fabricado";
+
+
+    use \AppBundle\Traits\AdminLotesEstadoTrait;
+    use \AppBundle\Traits\TimestampableEntityTrait;
+    
     /**
      * @var int
      *
@@ -20,6 +33,13 @@ class Fabricacion
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
+
+        /**
+    * @ORM\Column(name="estado", type="string", length=255, nullable=true)
+    * @Assert\Choice({"pendiente","inconsistente" ,"fabricado"})
+    */
+    private $estado;
+
 
     /**
      * @var int
@@ -36,10 +56,18 @@ class Fabricacion
     private $formulaEnzimatica;
 
     /**
-     * @var Lote
-     * @ORM\OneToMany(targetEntity="Lote", mappedBy="fabricacion",cascade={"persist"})
+     * @var LoteFaltante
+     * @ORM\OneToMany(targetEntity="LoteFaltante", mappedBy="fabricacion",cascade={"persist"})
      */
-    private $lotes;
+    private $faltantes;
+
+    /**
+     * @var LoteAsignado
+     * @ORM\OneToMany(targetEntity="LoteAsignado", mappedBy="fabricacion",cascade={"persist"})
+     */
+    private $loteAsignados;
+
+
 
     /**
      * Get id
@@ -79,7 +107,7 @@ class Fabricacion
      */
     public function __construct()
     {
-        $this->lotes = new \Doctrine\Common\Collections\ArrayCollection();
+        
     }
 
     /**
@@ -106,37 +134,38 @@ class Fabricacion
         return $this->formulaEnzimatica;
     }
 
+
     /**
-     * Add lote
+     * Set estado
      *
-     * @param \AppBundle\Entity\Lote $lote
+     * @param string $estado
      *
      * @return Fabricacion
      */
-    public function addLote(\AppBundle\Entity\Lote $lote)
+    public function setEstado($estado)
     {
-        $this->lotes[] = $lote;
+        $this->estado = $estado;
 
         return $this;
     }
 
     /**
-     * Remove lote
+     * Get estado
      *
-     * @param \AppBundle\Entity\Lote $lote
+     * @return string
      */
-    public function removeLote(\AppBundle\Entity\Lote $lote)
+    public function getEstado()
     {
-        $this->lotes->removeElement($lote);
+        return $this->estado;
     }
 
     /**
-     * Get lotes
+     * Get loteAsignados
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getLotes()
+    public function getLoteAsignados()
     {
-        return $this->lotes;
+        return $this->loteAsignados;
     }
 }

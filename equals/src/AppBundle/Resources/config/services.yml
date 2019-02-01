@@ -50,3 +50,10 @@ services:
         tags:
             - { name: sonata.admin, manager_type: orm, group: admin, label: Remito }
         public: true
+
+    app.admin.fabricacion:
+        class: AppBundle\Admin\FabricacionAdmin
+        arguments: [~, AppBundle\Entity\Fabricacion, , AppBundle:FabricacionCRUD]
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: admin, label: Fabricacion }
+        public: true

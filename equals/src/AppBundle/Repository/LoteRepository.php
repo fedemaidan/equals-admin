@@ -40,6 +40,9 @@ class LoteRepository extends \Doctrine\ORM\EntityRepository
 	}
 
 	public function sumDe($producto, $cantidadEstado) {
+		$em = $this->getEntityManager();
+		$qb = $em->createQueryBuilder();
+
 		$sql = $this->createQueryBuilder('l')
 	        ->select('SUM(l.'.$cantidadEstado.') AS total')
 	           ->where(

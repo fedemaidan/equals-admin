@@ -1,0 +1,9 @@
+{% if object.estado == 'inconsistente' %}
+	<a class="btn btn-sm btn-warning" href="{{ admin.generateObjectUrl('completar', object) }}"><b>Completar</b></a>
+{% elseif object.estado == 'pendiente' %}
+	<a class="btn btn-sm btn-success" href="{{ admin.generateObjectUrl('confirmar', object) }}"><b>Confirmar </b></a>
+	<a class="btn btn-sm btn-info" href="{{ admin.generateObjectUrl('imprimir', object) }}"><b>Imprimir </b></a>
+{% elseif object.estado == 'fabricado' %}
+	<a class="btn btn-sm btn-info" href="{{ admin.generateObjectUrl('imprimir', object) }}"><b>Imprimir </b></a>
+{% endif %}
+

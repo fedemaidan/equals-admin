@@ -5,9 +5,9 @@ namespace AppBundle\Controller;
 use Sonata\AdminBundle\Controller\CRUDController as Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
-use AppBundle\Entity\Remito;
+use AppBundle\Entity\Fabricacion;
 
-class RemitoCRUDController extends Controller
+class FabricacionCRUDController extends Controller
 {
     public function actuarAction()
     {
@@ -19,20 +19,22 @@ class RemitoCRUDController extends Controller
 
     public function confirmarAction()
     {
+
         $dashboard = $this->get('request')->get('dashboard',false);
-        $remito = $this->admin->getSubject();
-        $success = true;
+        $fabricacion = $this->admin->getSubject();
 
-        if ($remito->getEstado() == Remito::Pendiente) {
-            $remito->setEstado(Remito::Vendido);
-            $this->container->get('adminLotes_service')->limpiarReservados($remito);
-
+        if ($fabricacion->getEstado() == Fabricacion::Pendiente) {
+            $fabricacion->setEstado(Fabricacion::Fabricado);
+            $this->container->get('adminLotes_service')->crearLote($fabricacion);
+            $this->container->get('adminLotes_service')->limpiarReservados($fabricacion);
+            
             $em = $this->getDoctrine()->getManager();
-            $em->persist($remito);
-            $em->flush();
+
+            $em->persist($fabricacion);
+            $em->flush();                
         }
 
-        if ($success) $this->addFlash('sonata_flash_success', 'El remito se confirmó con éxito');
+        $this->addFlash('sonata_flash_success', 'La fabricación se confirmó con éxito');
         if ($dashboard) return new RedirectResponse('/admin/dashboard');
 
         return new RedirectResponse($this->admin->generateUrl('list', $this->admin->getFilterParameters()));
@@ -40,31 +42,34 @@ class RemitoCRUDController extends Controller
 
     public function completarAction()
     {
-
         $dashboard = $this->get('request')->get('dashboard',false);
+
         $em = $this->getDoctrine()->getManager();
-        $remito = $this->admin->getSubject();
+        $fabricacion = $this->admin->getSubject();
         $success = true;
 
-        foreach ($remito->getFaltantes() as $key => $faltante) {
-            $cantidad = $this->container->get('adminLotes_service')->reservarLotesMasAntiguos($faltante->getProducto(), $faltante->getCantidad(), $remito);
+        foreach ($fabricacion->getFaltantes() as $key => $faltante) {
+            $cantidad = $this->container->get('adminLotes_service')->reservarLotesMasAntiguos($faltante->getProducto(), $faltante->getCantidad(), $fabricacion, "fabricacion");
+
 
             if ($cantidad == 0) {
-                $remito->removeFaltante($faltante);
-                $remito->setEstado(Remito::Pendiente);
+                $fabricacion->removeFaltante($faltante);
+                $fabricacion->setEstado(Fabricacion::Pendiente);
                 $em->remove($faltante);
             }
-            else  {
+            else {
                 $faltante->setCantidad($cantidad);
                 $this->addFlash('sonata_flash_error', 'Queda un faltante de '.$cantidad.' kilos de '.$faltante->getProducto()->getNombre());
                 $success = false;
             }
         }
 
-        if ($success) $this->addFlash('sonata_flash_success', 'El remito se completó con éxito');
-        if ($dashboard) return new RedirectResponse('/admin/dashboard');
-        $em->persist($remito);
+        
+        $em->persist($fabricacion);
         $em->flush();
+
+        if ($success) $this->addFlash('sonata_flash_success', 'La fabricación se completó con éxito');
+        if ($dashboard) return new RedirectResponse('/admin/dashboard');
 
         return new RedirectResponse($this->admin->generateUrl('list', $this->admin->getFilterParameters()));
     }

@@ -44,6 +44,7 @@ class CompraAdmin extends AbstractAdmin
         $formMapper
             ->add('proveedor')
             ->add('lotes', CollectionType::class, [
+                'attr' => ["class" => "col-md-6 col-xs-12"],
                 'by_reference' => false, // Use this because of reasons
                 'allow_add' => true, // True if you want allow adding new entries to the collection
                 'allow_delete' => true, // True if you want to allow deleting entries

@@ -31,28 +31,28 @@ class Lote
     /**
      * @var int
      *
-     * @ORM\Column(name="cantidadInicial", type="decimal",  precision=7, scale=2, nullable=false)
+     * @ORM\Column(name="cantidadInicial", type="decimal",  precision=10, scale=2, nullable=false)
      */
     private $cantidadInicial;
 
     /**
      * @var int
      *
-     * @ORM\Column(name="cantidadDisponible", type="decimal",  precision=7, scale=2, nullable=true)
+     * @ORM\Column(name="cantidadDisponible", type="decimal",  precision=10, scale=2, nullable=true)
      */
     private $cantidadDisponible;
 
     /**
      * @var int
      *
-     * @ORM\Column(name="cantidadReservada", type="decimal",  precision=7, scale=2, nullable=true)
+     * @ORM\Column(name="cantidadReservada", type="decimal",  precision=10, scale=2, nullable=true)
      */
     private $cantidadReservada;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="costo", type="decimal",  precision=7, scale=2, nullable=true)
+     * @ORM\Column(name="costo", type="decimal",  precision=10, scale=2, nullable=true)
      */
     private $costo;
 

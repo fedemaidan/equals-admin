@@ -11,6 +11,7 @@ use Sonata\AdminBundle\Show\ShowMapper;
 class LoteAdmin extends AbstractAdmin
 {
     use \AppBundle\Traits\LoteTrait;
+    use \AppBundle\Traits\AdminWithOutAdminTrait;
 
     /**
      * @param DatagridMapper $datagridMapper
