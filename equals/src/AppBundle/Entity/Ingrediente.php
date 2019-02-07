@@ -24,9 +24,9 @@ class Ingrediente
     /**
      * @var int
      *
-     * @ORM\Column(name="cantidad", type="integer")
+     * @ORM\Column(name="porcentaje", type="decimal",  precision=10, scale=2, nullable=false)
      */
-    private $cantidad;
+    private $porcentaje;
 
     /**
      * @var Producto
@@ -53,30 +53,7 @@ class Ingrediente
         return $this->id;
     }
 
-    /**
-     * Set cantidad
-     *
-     * @param integer $cantidad
-     *
-     * @return Ingrediente
-     */
-    public function setCantidad($cantidad)
-    {
-        $this->cantidad = $cantidad;
-
-        return $this;
-    }
-
-    /**
-     * Get cantidad
-     *
-     * @return int
-     */
-    public function getCantidad()
-    {
-        return $this->cantidad;
-    }
-
+   
     /**
      * Set producto
      *
@@ -127,6 +104,30 @@ class Ingrediente
 
     public function __toString()
     {
-        return strval($this->getProducto().'  '.$this->getCantidad().'Kilos');
+        return strval($this->getPorcentaje().'%  de '.$this->getProducto());
+    }
+
+    /**
+     * Set porcentaje
+     *
+     * @param string $porcentaje
+     *
+     * @return Ingrediente
+     */
+    public function setPorcentaje($porcentaje)
+    {
+        $this->porcentaje = $porcentaje;
+
+        return $this;
+    }
+
+    /**
+     * Get porcentaje
+     *
+     * @return string
+     */
+    public function getPorcentaje()
+    {
+        return $this->porcentaje;
     }
 }

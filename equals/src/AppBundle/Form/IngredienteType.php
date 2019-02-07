@@ -11,7 +11,7 @@ class IngredienteType extends AbstractType
     {
         $builder
             ->add('producto')
-            ->add('cantidad')
+            ->add('porcentaje')
         ;
     }
     public function configureOptions(OptionsResolver $resolver)

@@ -145,4 +145,16 @@ class FormulaEnzimatica
     {
         return $this->getNombre().'.';
     }
+
+    public function validaIngredientes() {
+        $porcentaje = 0;
+
+        foreach ($this->ingredientes as $ingre) { 
+            $porcentaje += $ingre->getPorcentaje();    
+        }
+
+        if ($porcentaje != 100) {
+            throw new \RuntimeException("La suma total de los porcentajes de los ingredientes de la formula debe ser 100. Pero es ".$porcentaje);
+        }
+    }
 }

@@ -208,4 +208,5 @@ class Fabricacion
     {
         return $this->lote;
     }
+
 }

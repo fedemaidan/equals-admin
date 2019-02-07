@@ -72,10 +72,10 @@ class AdminLotesService
 
     public function preInitFabricacion($fabricacion) {
         $ingredientes = $fabricacion->getFormulaEnzimatica()->getIngredientes();
-
+        
         foreach ($ingredientes as $ingre) {
-            
-            $cantidad = $this->reservarLotesMasAntiguos($ingre->getProducto(), $ingre->getCantidad() * $fabricacion->getCantidad(), $fabricacion, 'fabricacion');
+            $cantidad = $ingre->getPorcentaje() * $fabricacion->getCantidad() / 100;
+            $cantidad = $this->reservarLotesMasAntiguos($ingre->getProducto(), $cantidad, $fabricacion, 'fabricacion');
             
             if ($cantidad > 0) {
                 $faltante = new LoteFaltante();

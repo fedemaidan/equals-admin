@@ -9,6 +9,8 @@ use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Show\ShowMapper;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use AppBundle\Form\IngredienteType;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+
 class FormulaEnzimaticaAdmin extends AbstractAdmin
 {
 
@@ -67,15 +69,35 @@ class FormulaEnzimaticaAdmin extends AbstractAdmin
 
     public function prePersist($formula)
     {
-        foreach ($formula->getIngredientes() as $ingrediente) {
-            $ingrediente->setFormulaEnzimatica($formula); 
+
+        try {
+            
+            foreach ($formula->getIngredientes() as $ingrediente) {
+                $ingrediente->setFormulaEnzimatica($formula); 
+            }
+
+            $formula->validaIngredientes();
+
+        } catch (\Exception $e) {
+            $this->getRequest()->getSession()->getFlashBag()->add("sonata_flash_error", $e->getMessage());
+         
         }
+
     }
     
     public function preUpdate($formula)
     {
-        foreach ($formula->getIngredientes() as $ingrediente) {
-            $ingrediente->setFormulaEnzimatica($formula);   
+        try {
+            
+            foreach ($formula->getIngredientes() as $ingrediente) {
+                $ingrediente->setFormulaEnzimatica($formula); 
+            }
+
+            $formula->validaIngredientes();
+
+        } catch (\Exception $e) {
+            $this->getRequest()->getSession()->getFlashBag()->add("sonata_flash_error", $e->getMessage());
         }
+
     }
 }
