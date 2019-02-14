@@ -223,13 +223,14 @@ class Remito
             foreach ($this->getLoteAsignados() as $lote) {
                 if ($item->getProducto()->getId() == $lote->getLote()->getProducto()->getId()) {
                     $fila++;
+
                     $valor =  "Lote: ".$lote->getLote()->getNumero();
                     if ($lote->getCantidad() != $item->getCantidad())
                         $valor .= "(".$lote->getCantidad().")";
+                        
                     $sheet->setCellValue('D'.$fila,$valor );
                 }
             }
-            $sheet->setCellValue('D'.$fila, "Lote: ");
         }
 
         $writer = new Xlsx($spreadsheet);
