@@ -199,7 +199,8 @@ class Remito
     public function imprimir() {
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
-        $sheet->setCellValue('G4', $this->getFechaCreacion());
+        $sheet->getColumnDimension('G')->setWidth(4);
+        $sheet->setCellValue('G4', $this->getFechaCreacion()->format('d/m/Y'));
         $sheet->setCellValue('B9', $this->getCliente()->getNombre());
         $sheet->setCellValue('B11', $this->getCliente()->getDireccionFiscal());
         $sheet->setCellValue('B13', 'RESPONSABLE INSCRIPTO');
@@ -207,6 +208,29 @@ class Remito
         $sheet->setCellValue('C15', $this->getCliente()->getDireccionEntrega());
         $sheet->setCellValue('B17', $this->getId());
         $sheet->setCellValue('H17', $this->getOrdenDeCompra());
+        $sheet->mergeCells('G17:H17');
+        $sheet->mergeCells('C15:H15');
+        $sheet->mergeCells('G4:H4');
+        $sheet->getRowDimension('3')->setRowHeight(37);
+        $sheet->getStyle('B17')->getAlignment()->setHorizontal('left');
+
+        $fila = 21;
+
+        foreach ($this->getItemsRemito() as $item) {
+            $sheet->setCellValue('A'.$fila, $item->getProducto()->getId());
+            $sheet->setCellValue('B'.$fila, $item->getCantidad());
+            $sheet->setCellValue('D'.$fila, $item->getProducto()->getNombre());
+            foreach ($this->getLoteAsignados() as $lote) {
+                if ($item->getProducto()->getId() == $lote->getLote()->getProducto()->getId()) {
+                    $fila++;
+                    $valor =  "Lote: ".$lote->getLote()->getNumero();
+                    if ($lote->getCantidad() != $item->getCantidad())
+                        $valor .= "(".$lote->getCantidad().")";
+                    $sheet->setCellValue('D'.$fila,$valor );
+                }
+            }
+            $sheet->setCellValue('D'.$fila, "Lote: ");
+        }
 
         $writer = new Xlsx($spreadsheet);
         return $writer;
