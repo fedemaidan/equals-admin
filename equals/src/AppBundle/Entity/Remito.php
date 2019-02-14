@@ -231,6 +231,7 @@ class Remito
                     $sheet->setCellValue('D'.$fila,$valor );
                 }
             }
+            $fila++;
         }
 
         $writer = new Xlsx($spreadsheet);
