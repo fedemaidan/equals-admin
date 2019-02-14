@@ -74,11 +74,11 @@ class FabricacionCRUDController extends Controller
         return new RedirectResponse($this->admin->generateUrl('list', $this->admin->getFilterParameters()));
     }
 
-    public function imprimirAction()
+    public function imprimirOrdenAction()
     {
-        $remito = $this->admin->getSubject();
-        $doc = $remito->imprimir();
-        $filename = "Remito-".$remito->getId().".xlsx";
+        $fabricacion = $this->admin->getSubject();
+        $doc = $fabricacion->imprimirOrden();
+        $filename = "Orden-".$fabricacion->getId().".xlsx";
          
         $response =  new StreamedResponse(
             function () use ($doc) {
@@ -87,6 +87,44 @@ class FabricacionCRUDController extends Controller
         );
 
         $response->headers->set('Content-Type', 'application/vnd.ms-excel');
+        $response->headers->set('Content-Disposition', 'attachment;filename="'.$filename.'"');
+        $response->headers->set('Cache-Control','max-age=0');
+        
+        return $response;
+    }
+
+    public function imprimirEtiquetaAction()
+    {
+        $fabricacion = $this->admin->getSubject();
+        $doc = $fabricacion->imprimirEtiqueta();
+        $filename = "Etiqueta-".$fabricacion->getId().".xlsx";
+         
+        $response =  new StreamedResponse(
+            function () use ($doc) {
+                $doc->save('php://output');
+            }
+        );
+
+        $response->headers->set('Content-Type', 'application/vnd.ms-excel');
+        $response->headers->set('Content-Disposition', 'attachment;filename="'.$filename.'"');
+        $response->headers->set('Cache-Control','max-age=0');
+        
+        return $response;
+    }
+
+    public function imprimirCoaAction()
+    {
+        $fabricacion = $this->admin->getSubject();
+        $doc = $fabricacion->imprimirCoa();
+        $filename = "Coa-".$fabricacion->getId().".docx";
+         
+        $response =  new StreamedResponse(
+            function () use ($doc) {
+                $doc->save('php://output');
+            }
+        );
+
+        $response->headers->set('Content-Type', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
         $response->headers->set('Content-Disposition', 'attachment;filename="'.$filename.'"');
         $response->headers->set('Cache-Control','max-age=0');
         

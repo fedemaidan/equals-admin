@@ -16,7 +16,9 @@ class FabricacionAdmin extends AbstractAdmin
         $collection->add('actuar', $this->getRouterIdParameter().'/actuar');
         $collection->add('confirmar', $this->getRouterIdParameter().'/confirmar');
         $collection->add('completar', $this->getRouterIdParameter().'/completar');
-        $collection->add('imprimir', $this->getRouterIdParameter().'/imprimir');
+        $collection->add('imprimirOrden', $this->getRouterIdParameter().'/imprimir/orden');
+        $collection->add('imprimirEtiqueta', $this->getRouterIdParameter().'/imprimir/etiqueta');
+        $collection->add('imprimirCoa', $this->getRouterIdParameter().'/imprimir/coa');
     }
 
     protected function configureDatagridFilters(DatagridMapper $datagridMapper)

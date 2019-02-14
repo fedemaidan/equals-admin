@@ -172,11 +172,15 @@ class DashboardController extends Controller
             
             case 'pendiente':
                 $accionesPosibles = '<a class="btn btn-sm btn-success" href="'.$this->generateUrl('admin_app_fabricacion_confirmar',["id"=> $fab->getId(), 'dashboard' => true]).'"><b>Confirmar </b></a>
-                    <a class="btn btn-sm btn-info" href="'.$this->generateUrl('admin_app_fabricacion_imprimir',["id"=> $fab->getId()]).'") }}"><b>Imprimir </b></a>';
+                    <a class="btn btn-sm btn-info" href="'.$this->generateUrl('admin_app_fabricacion_imprimirOrden',["id"=> $fab->getId()]).'") }}"><b>Orden</b></a>
+                    <a class="btn btn-sm btn-info" href="'.$this->generateUrl('admin_app_fabricacion_imprimirEtiqueta',["id"=> $fab->getId()]).'") }}"><b>Etiqueta </b></a>
+                    <a class="btn btn-sm btn-info" href="'.$this->generateUrl('admin_app_fabricacion_imprimirCoa',["id"=> $fab->getId()]).'") }}"><b>COA </b></a>';
                 break;
 
             case 'fabricado':
-                $accionesPosibles = '<a class="btn btn-sm btn-info" href="'.$this->generateUrl('admin_app_fabricacion_imprimir',["id"=> $fab->getId()]).'") }}"><b>Imprimir </b></a>';
+                $accionesPosibles = '<a class="btn btn-sm btn-info" href="'.$this->generateUrl('admin_app_fabricacion_imprimirOrden',["id"=> $fab->getId()]).'") }}"><b>Orden </b></a>
+                <a class="btn btn-sm btn-info" href="'.$this->generateUrl('admin_app_fabricacion_imprimirEtiqueta',["id"=> $fab->getId()]).'") }}"><b>Etiqueta </b></a>
+                <a class="btn btn-sm btn-info" href="'.$this->generateUrl('admin_app_fabricacion_imprimirCoa',["id"=> $fab->getId()]).'") }}"><b>COA </b></a>';
                 break;
         }
 

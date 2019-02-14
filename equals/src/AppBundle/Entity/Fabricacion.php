@@ -209,4 +209,31 @@ class Fabricacion
         return $this->lote;
     }
 
+    public function imprimirOrden() {
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+     
+        $writer = new Xlsx($spreadsheet);
+        return $writer;
+    }
+
+    public function imprimirEtiqueta() {
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+     
+        $writer = new Xlsx($spreadsheet);
+        return $writer;
+    }
+
+    public function imprimirCoa() {
+        /* Este debe ser un docx */
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+     
+        $writer = new Xlsx($spreadsheet);
+        return $writer;
+    }
+
+
+
 }
