@@ -212,7 +212,59 @@ class Fabricacion
     public function imprimirOrden() {
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
-     
+
+        $sheet->setCellValue('A1', 'ORDEN DE FABRICACION');
+        $sheet->setCellValue('H1', 'N° '.$this->getId());
+
+        $sheet->setCellValue('A2', $this->getFormulaEnzimatica()->getNombre());
+
+        $sheet->setCellValue('A9', 'FECHA DE EMISION');
+        $sheet->setCellValue('C9', date('d/m/Y'));
+        $sheet->getColumnDimension('E')->setWidth(6);
+        $sheet->setCellValue('E9', 'Lote N°');
+        if(current($this->getLote())){
+            $sheet->setCellValue('F9', current($this->getLote())->getNumero());
+        }
+        $sheet->setCellValue('G9', 'Cantidad Kg');
+        $sheet->getColumnDimension('G')->setWidth(11);
+        $sheet->setCellValue('H9', $this->getCantidad());
+
+        $sheet->setCellValue('A13', $this->getFormulaEnzimatica()->getNombre());
+        $sheet->mergeCells('A13:F14');
+        $sheet->getStyle("A13:F14")
+            ->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+        
+        $sheet->setCellValue('A16', 'PRODUCTO');
+        $sheet->mergeCells('A16:E16');
+        $sheet->setCellValue('F16', 'LOTE');
+        $sheet->setCellValue('G16', '%');
+        $sheet->setCellValue('H16', $this->getCantidad());
+
+        $fila = $fila_ini = 17;
+
+        foreach ($this->getFormulaEnzimatica()->getIngredientes() as $ingrediente) {
+            $sheet->setCellValue('A'.$fila, $ingrediente->getProducto());
+            $sheet->mergeCells('A'.$fila.':E'.$fila);
+            if(current($ingrediente->getProducto()->getLotes())){
+                $sheet->setCellValue('F'.$fila, current($ingrediente->getProducto()->getLotes()));
+            }
+            $sheet->setCellValue('G'.$fila, $ingrediente->getPorcentaje());
+            $sheet->setCellValue('H'.$fila, $this->getCantidad() * $ingrediente->getPorcentaje() / 100);
+            
+            $fila++;
+        }
+
+        $sheet->setCellValue('A'.$fila, 'TOTAL');
+        $sheet->mergeCells('A'.$fila.':E'.$fila);
+        $sheet->setCellValue('G'.$fila, '=SUM(G'.$fila_ini.':G'.($fila-1).')');
+        $sheet->setCellValue('H'.$fila, '=SUM(H'.$fila_ini.':H'.($fila-1).')');
+
+        $sheet->getStyle('A16:H'.$fila)
+            ->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+
+        $sheet->getStyle('A1:H'.$fila)
+            ->getBorders()->getOutline()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THICK);
+
         $writer = new Xlsx($spreadsheet);
         return $writer;
     }
