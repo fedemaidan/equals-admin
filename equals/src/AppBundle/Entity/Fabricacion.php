@@ -225,7 +225,7 @@ class Fabricacion
         $sheet->setCellValue('A2', $this->getFormulaEnzimatica()->getNombre());
         $this->dibujarBordes($sheet, 'A2:C2');
 
-        $sheet->getStyle("A1:H2")->getFont()->setBold(true);
+        $this->setStyles($sheet, "A1:H2", true, false, false, false);
 
         $sheet->getRowDimension('1')->setRowHeight($HEADER_HEIGHT);
         $sheet->getRowDimension('2')->setRowHeight($HEADER_HEIGHT);
@@ -234,22 +234,20 @@ class Fabricacion
         $sheet->setCellValue('C9', date('d/m/Y'));
         $sheet->getColumnDimension('E')->setWidth(6);
         $sheet->setCellValue('E9', 'Lote N°');
-        if(current($this->getLote())){
-            $sheet->setCellValue('F9', current($this->getLote())->getNumero());
+        if($this->getLote()->first()){
+            $sheet->setCellValue('F9', $this->getLote()->first()->getNumero());
         }
         $sheet->setCellValue('G9', 'Cantidad Kg');
         $sheet->getColumnDimension('G')->setWidth(9);
         $sheet->setCellValue('H9', $this->getCantidad());
-        $sheet->getStyle("A9:H9")->getFont()->setSize(8);
+        $this->setStyles($sheet, 'A9:H9', false, 8, false, false);
         $this->dibujarBordes($sheet, 'A9:B9');
         $this->dibujarBordes($sheet, 'C9');
         $this->dibujarTodosBordes($sheet, 'E9:H9');
 
         $sheet->setCellValue('A13', $this->getFormulaEnzimatica()->getNombre());
         $sheet->mergeCells('A13:F14');
-        $sheet->getStyle("A13:F14")->getFont()->setBold(true)->setSize(14);
-        $sheet->getStyle("A13:F14")
-            ->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+        $this->setStyles($sheet, 'A13:F14', true, 14, \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER, false);
         $this->dibujarBordes($sheet, 'A13:F14');
         
         $sheet->setCellValue('A16', 'PRODUCTO');
@@ -263,8 +261,8 @@ class Fabricacion
         foreach ($this->getFormulaEnzimatica()->getIngredientes() as $ingrediente) {
             $sheet->setCellValue('A'.$fila, $ingrediente->getProducto());
             $sheet->mergeCells('A'.$fila.':E'.$fila);
-            if(current($ingrediente->getProducto()->getLotes())){
-                $sheet->setCellValue('F'.$fila, current($ingrediente->getProducto()->getLotes()));
+            if($ingrediente->getProducto()->getLotes()->first()){
+                $sheet->setCellValue('F'.$fila, $ingrediente->getProducto()->getLotes()->first());
             }
             $sheet->setCellValue('G'.$fila, $ingrediente->getPorcentaje());
             $sheet->setCellValue('H'.$fila, $this->getCantidad() * $ingrediente->getPorcentaje() / 100);
@@ -278,9 +276,7 @@ class Fabricacion
         $sheet->setCellValue('H'.$fila, '=SUM(H'.$fila_ini.':H'.($fila-1).')');
         $sheet->getRowDimension($fila)->setRowHeight($TABLE_ROW_HEIGHT);
 
-        $sheet->getStyle('A16:H'.$fila)->getFont()->setBold(true)->setSize(10);
-        $sheet->getStyle('A16:H'.$fila)
-            ->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+        $this->setStyles($sheet, 'A16:H'.$fila, true, 10, \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER, false);
         $this->dibujarTodosBordes($sheet, 'A16:H'.$fila);
 
         $this->dibujarBordes($sheet, 'A1:H'.$fila);
@@ -306,10 +302,92 @@ class Fabricacion
 
     }
 
+    private function setStyles($sheet, $filas, $bold, $font_size, $horizontal_alignment, $vertical_alignment){
+
+        $sheet->getStyle($filas)->getFont()->setBold($bold);
+
+        if($font_size > 0){
+            $sheet->getStyle($filas)->getFont()->setSize($font_size);
+        }
+
+        if($horizontal_alignment){
+            $sheet->getStyle($filas)
+                ->getAlignment()->setHorizontal($horizontal_alignment);
+        }
+
+        if($vertical_alignment){
+            $sheet->getStyle($filas)
+                ->getAlignment()->setVertical($vertical_alignment);
+        }
+        
+    }
+
     public function imprimirEtiqueta() {
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
-     
+
+        //styles
+        $this->setStyles($sheet, 'B3:C16', false, false, \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER, false);
+        $this->setStyles($sheet, 'B3:B8', false, false, false, \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
+        $this->setStyles($sheet, 'B13', false, false, false, \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
+        $this->setStyles($sheet, 'C3:C8', false, false, false, \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
+        $sheet->getStyle('B3:C16')->getAlignment()->setWrapText(true);
+
+        $sheet->getColumnDimension('A')->setWidth(1);
+        $sheet->getColumnDimension('B')->setWidth(50);
+        $sheet->getColumnDimension('C')->setWidth(25);
+
+        $sheet->getRowDimension(12)->setRowHeight(35);
+        
+        $this->setStyles($sheet, 'B3', false, 28, false, false);
+        $this->setStyles($sheet, 'B6', false, 14, false, false);
+        $this->setStyles($sheet, 'B7:B8', false, 10, false, false);
+        $this->setStyles($sheet, 'B9:B10', false, 8, false, false);
+        $this->setStyles($sheet, 'B11', true, 20, false, false);
+        $this->setStyles($sheet, 'B12', false, 16, false, false);
+        $this->setStyles($sheet, 'B13', false, 5, false, false);
+        $this->setStyles($sheet, 'B16', false, 7, false, false);
+        $this->setStyles($sheet, 'C3:C8', true, 6, false, false);
+        $this->setStyles($sheet, 'C9:C10', false, 6, false, false);
+        $this->setStyles($sheet, 'C12', true, 10, false, false);
+
+        $this->dibujarBordes($sheet, 'B3:B16');
+        $this->dibujarBordes($sheet, 'C3:C16');
+
+        //first column
+        $sheet->setCellValue('B3', $this->getFormulaEnzimatica()->getNombre());
+        $sheet->mergeCells('B3:B5');
+
+        if($this->getLote()->first()){
+            $sheet->setCellValue('B8', 'Lote: '.$this->getLote()->first()->getNumero());
+        } else{
+            $sheet->setCellValue('B8', 'Lote: ');
+        }
+
+        $sheet->setCellValue('B13','Dirección: Blvd. Azucena Villaflor 450 8° Piso Depto.03 (C1107CIJ) Ciudad Autónoma de Buenos Aires.
+            Tel.Oficina: (011)-5775-0307     Email: info@equals.com.ar    Web: www.equals.com.ar');
+        $sheet->mergeCells('B13:B15');
+
+        $sheet->setCellValue('B16', 'Industria Argentina');
+
+        //second column
+        $sheet->setCellValue('C3', 'ALMACENAR EN ENVASE CERRADO EN LUGAR FRESCO Y SECO');
+        $sheet->mergeCells('C3:C4');
+
+        $sheet->setCellValue('C5', 'Alergeno: Contiene gluten');
+        $sheet->mergeCells('C5:C6');
+
+        $sheet->setCellValue('C7', 'Dosis de uso: 10 – 100 ppm');
+        $sheet->mergeCells('C7:C8');
+
+        $sheet->setCellValue('C9', 'RNE: 02-034.418');
+
+        $sheet->setCellValue('C10', 'R.N.P.A. 02-600536');
+
+        $sheet->setCellValue('C12', 'Comercializado por:
+Equals S.A.
+Jose Bonifacio 1191, CABA');
+
         $writer = new Xlsx($spreadsheet);
         return $writer;
     }
