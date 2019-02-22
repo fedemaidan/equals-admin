@@ -210,13 +210,25 @@ class Fabricacion
     }
 
     public function imprimirOrden() {
+
+        $HEADER_HEIGHT = 20;
+        $TABLE_ROW_HEIGHT = 40;
+
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
 
         $sheet->setCellValue('A1', 'ORDEN DE FABRICACION');
         $sheet->setCellValue('H1', 'N° '.$this->getId());
+        $this->dibujarBordes($sheet, 'A1:G1');
+        $this->dibujarBordes($sheet, 'H1');
 
         $sheet->setCellValue('A2', $this->getFormulaEnzimatica()->getNombre());
+        $this->dibujarBordes($sheet, 'A2:C2');
+
+        $sheet->getStyle("A1:H2")->getFont()->setBold(true);
+
+        $sheet->getRowDimension('1')->setRowHeight($HEADER_HEIGHT);
+        $sheet->getRowDimension('2')->setRowHeight($HEADER_HEIGHT);
 
         $sheet->setCellValue('A9', 'FECHA DE EMISION');
         $sheet->setCellValue('C9', date('d/m/Y'));
@@ -226,22 +238,28 @@ class Fabricacion
             $sheet->setCellValue('F9', current($this->getLote())->getNumero());
         }
         $sheet->setCellValue('G9', 'Cantidad Kg');
-        $sheet->getColumnDimension('G')->setWidth(11);
+        $sheet->getColumnDimension('G')->setWidth(9);
         $sheet->setCellValue('H9', $this->getCantidad());
+        $sheet->getStyle("A9:H9")->getFont()->setSize(8);
+        $this->dibujarBordes($sheet, 'A9:B9');
+        $this->dibujarBordes($sheet, 'C9');
+        $this->dibujarTodosBordes($sheet, 'E9:H9');
 
         $sheet->setCellValue('A13', $this->getFormulaEnzimatica()->getNombre());
         $sheet->mergeCells('A13:F14');
+        $sheet->getStyle("A13:F14")->getFont()->setBold(true)->setSize(14);
         $sheet->getStyle("A13:F14")
             ->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+        $this->dibujarBordes($sheet, 'A13:F14');
         
         $sheet->setCellValue('A16', 'PRODUCTO');
         $sheet->mergeCells('A16:E16');
         $sheet->setCellValue('F16', 'LOTE');
         $sheet->setCellValue('G16', '%');
         $sheet->setCellValue('H16', $this->getCantidad());
+        $sheet->getRowDimension('16')->setRowHeight($TABLE_ROW_HEIGHT);
 
         $fila = $fila_ini = 17;
-
         foreach ($this->getFormulaEnzimatica()->getIngredientes() as $ingrediente) {
             $sheet->setCellValue('A'.$fila, $ingrediente->getProducto());
             $sheet->mergeCells('A'.$fila.':E'.$fila);
@@ -250,23 +268,42 @@ class Fabricacion
             }
             $sheet->setCellValue('G'.$fila, $ingrediente->getPorcentaje());
             $sheet->setCellValue('H'.$fila, $this->getCantidad() * $ingrediente->getPorcentaje() / 100);
+            $sheet->getRowDimension($fila)->setRowHeight($TABLE_ROW_HEIGHT);
             
             $fila++;
         }
-
         $sheet->setCellValue('A'.$fila, 'TOTAL');
         $sheet->mergeCells('A'.$fila.':E'.$fila);
         $sheet->setCellValue('G'.$fila, '=SUM(G'.$fila_ini.':G'.($fila-1).')');
         $sheet->setCellValue('H'.$fila, '=SUM(H'.$fila_ini.':H'.($fila-1).')');
+        $sheet->getRowDimension($fila)->setRowHeight($TABLE_ROW_HEIGHT);
 
+        $sheet->getStyle('A16:H'.$fila)->getFont()->setBold(true)->setSize(10);
         $sheet->getStyle('A16:H'.$fila)
             ->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+        $this->dibujarTodosBordes($sheet, 'A16:H'.$fila);
 
-        $sheet->getStyle('A1:H'.$fila)
-            ->getBorders()->getOutline()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THICK);
+        $this->dibujarBordes($sheet, 'A1:H'.$fila);
 
         $writer = new Xlsx($spreadsheet);
         return $writer;
+    }
+
+    private function dibujarBordes($sheet, $filas){
+        $sheet->getStyle($filas)
+            ->getBorders()->getOutline()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THICK);
+    }
+
+    private function dibujarTodosBordes($sheet, $filas) {
+        $styleArray = [
+            'borders' => [
+                'allBorders' => [
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THICK
+                ],
+            ],
+        ];
+        $sheet->getStyle($filas)->applyFromArray($styleArray);
+
     }
 
     public function imprimirEtiqueta() {
