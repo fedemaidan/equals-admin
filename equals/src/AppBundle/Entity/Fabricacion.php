@@ -5,6 +5,7 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 
@@ -337,6 +338,7 @@ class Fabricacion
         $sheet->getColumnDimension('B')->setWidth(50);
         $sheet->getColumnDimension('C')->setWidth(25);
 
+        $sheet->getRowDimension(11)->setRowHeight(28);
         $sheet->getRowDimension(12)->setRowHeight(35);
         
         $this->setStyles($sheet, 'B3', false, 28, false, false);
@@ -344,12 +346,20 @@ class Fabricacion
         $this->setStyles($sheet, 'B7:B8', false, 10, false, false);
         $this->setStyles($sheet, 'B9:B10', false, 8, false, false);
         $this->setStyles($sheet, 'B11', true, 20, false, false);
-        $this->setStyles($sheet, 'B12', false, 16, false, false);
+        $this->setStyles($sheet, 'B12', false, 6, false, false);
         $this->setStyles($sheet, 'B13', false, 5, false, false);
         $this->setStyles($sheet, 'B16', false, 7, false, false);
         $this->setStyles($sheet, 'C3:C8', true, 6, false, false);
         $this->setStyles($sheet, 'C9:C10', false, 6, false, false);
         $this->setStyles($sheet, 'C12', true, 10, false, false);
+        $sheet->getStyle('C12')->getFill()
+          ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
+          ->getStartColor()->setARGB('bfbfbf');
+
+        $objDrawing = new Drawing();
+        $objDrawing->setPath('LogoEquals.jpeg');
+        $objDrawing->setHeight(70)->setCoordinates('C13');
+        $objDrawing->setWorksheet($sheet);
 
         $this->dibujarBordes($sheet, 'B3:B16');
         $this->dibujarBordes($sheet, 'C3:C16');
@@ -358,12 +368,20 @@ class Fabricacion
         $sheet->setCellValue('B3', $this->getFormulaEnzimatica()->getNombre());
         $sheet->mergeCells('B3:B5');
 
+        $sheet->setCellValue('B6', 'VALOR HARCODEADO');
+        $sheet->setCellValue('B7', 'USO HARCODEADO');
+
         if($this->getLote()->first()){
             $sheet->setCellValue('B8', 'Lote: '.$this->getLote()->first()->getNumero());
         } else{
-            $sheet->setCellValue('B8', 'Lote: ');
+            $sheet->setCellValue('B8', 'Lote: HARCODEADO');
         }
 
+        $sheet->setCellValue('B9', 'Fecha de elaboación: 29/11/2018');
+        $sheet->setCellValue('B10', 'Fecha de elaboación: 28/11/2019');
+        $sheet->setCellValue('B11', 'XKg.');
+
+        $sheet->setCellValue('B12', 'Ingredientes: HARINA TERMOTRATADA ENRIQUECIDA*, ENZIMA XILANASA, MEJORADOR DE LA HARINA: INS 1100 *Harina enriquecida en los términos de la ley 25.630: Hierro 30.0 mg/kg, Tiamina 6.6mg/kg, Riboflavina 1.3 mg/kg, Nicotinamida 13.0 mg/kg y Acido Folico 2.2 mg/kg');
         $sheet->setCellValue('B13','Dirección: Blvd. Azucena Villaflor 450 8° Piso Depto.03 (C1107CIJ) Ciudad Autónoma de Buenos Aires.
             Tel.Oficina: (011)-5775-0307     Email: info@equals.com.ar    Web: www.equals.com.ar');
         $sheet->mergeCells('B13:B15');
