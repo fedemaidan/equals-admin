@@ -7,6 +7,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpWord\PhpWord;
+use PhpOffice\PhpWord\IOFactory;
 
 
 /**
@@ -412,11 +414,50 @@ Jose Bonifacio 1191, CABA');
 
     public function imprimirCoa() {
         /* Este debe ser un docx */
-        $spreadsheet = new Spreadsheet();
-        $sheet = $spreadsheet->getActiveSheet();
-     
-        $writer = new Xlsx($spreadsheet);
-        return $writer;
+        $phpWord = new \PhpOffice\PhpWord\PhpWord();
+        
+        $section = $phpWord->addSection();
+        $header = $section->addHeader();
+        $header->addImage('LogoEquals.jpeg', array('width' => 210, 'height' => 70, 'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER));
+
+        $section = $phpWord->addSection();
+        $section->addText('');
+        $section->addText('NOMBRE DEL PRODUCTO:     E BALANCE ST86');
+        $section->addText('');
+        $section->addText('LOTE N°: 253');
+        $section->addText('');
+        $section->addText('FECHA DE ELABORACION:        29/11/2018');
+        $section->addText('FECHA DE VENCIMIENTO:        28/11/2019');
+        $section->addText('');
+        $section->addText('DEFINICION: Mezcla enzimática, regulador para harinas de trigo.');
+        $section->addText('');
+        $section->addText('DESCRIPCION: Polvo de color blanco-crema , con aroma y sabor característico.');
+        $section->addText('');
+        $section->addText('CALIDAD : Apto para consumo humano');
+        $section->addText('');
+        $section->addText('PRESENTACION: Bolsa de papel multipliego con lámina de polietileno interior, contenido 25 kilogramos');
+        $section->addText('VIDA UTIL: 12 meses desde la fecha de elaboración. Almacenar en condiciones de humedad y temperatura adecuadas: 5°C a 25°C y hasta 65% HR');
+        $section->addText('');
+        $section->addText('RNE:     00000618');
+        $section->addText('');
+        $section->addText('RNPA:    Exp. En trámite');
+        $section->addText('');
+        $section->addText('ESPECIFICACIONES TECNICAS:');
+        $section->addText('');
+
+        $rows = 6;
+        $cols = 3;
+        $table = $section->addTable();
+        for ($r = 1; $r <= $rows; $r++) {
+            $table->addRow();
+            for ($c = 1; $c <= $cols; $c++) {
+                $table->addCell(1750)->addText("Row {$r}, Cell {$c}");
+            }
+        }
+
+        $objWriter = IOFactory::createWriter($phpWord, 'Word2007');
+        return $objWriter;
+
     }
 
 
