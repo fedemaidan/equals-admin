@@ -416,9 +416,15 @@ Jose Bonifacio 1191, CABA');
         /* Este debe ser un docx */
         $phpWord = new \PhpOffice\PhpWord\PhpWord();
         
+        $phpWord->addFontStyle('myOwnStyle', array('name'=>'Calibri', 'size'=>12));
+
         $section = $phpWord->addSection();
         $header = $section->addHeader();
         $header->addImage('LogoEquals.jpeg', array('width' => 210, 'height' => 70, 'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER));
+
+        $footer = $section->addFooter();
+        $footer->addPreserveText('Azucena Villaflor 550 - C.A.B.A  Tel: 54 11 5775 0307');
+        $footer->addPreserveText('www.equals.com.ar');
 
         $section = $phpWord->addSection();
         $section->addText('');
@@ -445,7 +451,7 @@ Jose Bonifacio 1191, CABA');
         $section->addText('ESPECIFICACIONES TECNICAS:');
         $section->addText('');
 
-        $rows = 6;
+        $rows = 5;
         $cols = 3;
         $table = $section->addTable();
         for ($r = 1; $r <= $rows; $r++) {
@@ -454,6 +460,26 @@ Jose Bonifacio 1191, CABA');
                 $table->addCell(1750)->addText("Row {$r}, Cell {$c}");
             }
         }
+
+        $section->addText('');
+        $section->addText('');
+        $section->addText('INFORMACION NUTRICIONAL APROXIMADA:');
+        $section->addText('');
+        $section->addText('Tamaño de Porción: 100g');
+        $section->addText('');
+        $section->addText('Carbohidratos 74,1g (VD : 25%) ; Proteínas 9,1 g ( VD: 12%); Grasas Totales : 1,8 g (VD : 3%);
+            Grasas Saturadas 0g (VD : 0%); Fibra Alimentaria : 3 g (VD: 12%); Sodio : 0 mg 
+            (VD : 0%) ; Valor Energético : 349 kcal (VD : 17%)');
+        $section->addText('');
+        $section->addText('(VD : % Valores diarios con base a una dieta de 2000 kcal u 8400 kJoule)');
+        $section->addText('');
+        $section->addText('');
+        $section->addText('');
+        $section->addText('RESPONSABLE DEL CERTIFICADO:   Silvia Lopez');
+        $section->addText('');
+        $section->addText('');
+        $section->addText('');
+        $section->addText('FECHA DE EMISION: 03/12/2018');
 
         $objWriter = IOFactory::createWriter($phpWord, 'Word2007');
         return $objWriter;
