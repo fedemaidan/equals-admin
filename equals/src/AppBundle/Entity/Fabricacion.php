@@ -365,23 +365,32 @@ class Fabricacion
         $this->dibujarBordes($sheet, 'C3:C16');
 
         //first column
-        $sheet->setCellValue('B3', $this->getFormulaEnzimatica()->getNombre());
+        $sheet->setCellValue('B3', $this->getFormulaEnzimatica()->getProductoResultante()->getNombre());
         $sheet->mergeCells('B3:B5');
 
-        $sheet->setCellValue('B6', 'VALOR HARCODEADO');
-        $sheet->setCellValue('B7', 'USO HARCODEADO');
+        $sheet->setCellValue('B6', $this->getFormulaEnzimatica()->getNombre());
+        $sheet->setCellValue('B7', 'USO INDUSTRIAL ALIMENTICIO');
 
-        if($this->getLote()->first()){
-            $sheet->setCellValue('B8', 'Lote: '.$this->getLote()->first()->getNumero());
+
+        $lote = $this->getLote()->first();
+
+        if($lote){
+            $sheet->setCellValue('B8', 'Lote: '.$lote->getNumero());
         } else{
-            $sheet->setCellValue('B8', 'Lote: HARCODEADO');
+            $sheet->setCellValue('B8', 'Lote: *');
         }
 
-        $sheet->setCellValue('B9', 'Fecha de elaboación: 29/11/2018');
-        $sheet->setCellValue('B10', 'Fecha de elaboación: 28/11/2019');
-        $sheet->setCellValue('B11', 'XKg.');
+        $elaboracion = $lote ? $lote->getFecha()->format('d/m/Y') : "*";
+
+        $vto = $lote ? $lote->getFecha()->add(new \DateInterval('P1Y'))->format('d/m/Y') : "*";
+
+        $sheet->setCellValue('B9', 'Fecha de elaboración: '.$elaboracion);
+
+        $sheet->setCellValue('B10', 'Fecha de vencimiento: '.$vto);
+        $sheet->setCellValue('B11', $this->getCantidad().'Kg.');
 
         $sheet->setCellValue('B12', 'Ingredientes: HARINA TERMOTRATADA ENRIQUECIDA*, ENZIMA XILANASA, MEJORADOR DE LA HARINA: INS 1100 *Harina enriquecida en los términos de la ley 25.630: Hierro 30.0 mg/kg, Tiamina 6.6mg/kg, Riboflavina 1.3 mg/kg, Nicotinamida 13.0 mg/kg y Acido Folico 2.2 mg/kg');
+
         $sheet->setCellValue('B13','Dirección: Blvd. Azucena Villaflor 450 8° Piso Depto.03 (C1107CIJ) Ciudad Autónoma de Buenos Aires.
             Tel.Oficina: (011)-5775-0307     Email: info@equals.com.ar    Web: www.equals.com.ar');
         $sheet->mergeCells('B13:B15');
@@ -411,14 +420,130 @@ Jose Bonifacio 1191, CABA');
     }
 
     public function imprimirCoa() {
-        /* Este debe ser un docx */
-        $spreadsheet = new Spreadsheet();
-        $sheet = $spreadsheet->getActiveSheet();
-     
-        $writer = new Xlsx($spreadsheet);
-        return $writer;
+        // Creating the new document...
+        $phpWord = new \PhpOffice\PhpWord\PhpWord();
+
+        /* Note: any element you append to a document must reside inside of a Section. */
+
+        // Adding an empty Section to the document...
+        $section = $phpWord->addSection();
+
+        //LOGO
+
+        #reemplaza una variable con una imagen
+        $aImgs = 
+            array(
+            'img' => '',
+            'size' => array(200, 150),
+            'dataImg' => 'Logo'
+            )
+        ;
+
+
+        $section->addImage("/server/web/LogoEquals.jpeg", ["height" => 50, 'align' => 'center' ]);
+
+        $section->addText("\n");
+        $section->addText("\n");
+        $section->addText("\n");
+
+        $table = $section->addTable([ 'align' => 'center' ]);
+        $table->addRow(300);
+        // Add cells
+        $fontStyleName = 'estiloTitulo';
+        $phpWord->addFontStyle(
+                $fontStyleName,
+                array('name' => 'Tahoma', 'size' => 10, 'color' => '1B2232', 'bold' => true)
+            );
+
+
+        $styleCell =
+        [
+            'borderColor' =>'black',
+            'borderSize' => 9,
+        ];
+
+        
+        $table->addCell(9000,$styleCell)->addText('PROTOCOLO DE ANALISIS',$fontStyleName,[ 'align' => 'center' ]);
+        
+        $section->addText("\n");
+
+        // Adding Text element with font customized inline...
+        $section->addText("NOMBRE DEL PRODUCTO:         ".$this->getFormulaEnzimatica()->getProductoResultante()->getNombre(),
+            array('name' => 'Calibri', 'size' => 12)
+        );
+
+        $section->addText("\n");
+
+        $lote = $this->getLote()->first();
+        $numero = $lote ? $lote->getNumero() : "*";
+
+        $section->addText("LOTE N°:         ".$numero,
+            array('name' => 'Calibri', 'size' => 12)
+        );
+
+        $section->addText("\n");
+        $elaboracion = $lote ? $lote->getFecha()->format('d/m/Y') : "*";
+        
+
+        $section->addText("FECHA DE ELABORACION:         ".$elaboracion,
+            array('name' => 'Calibri', 'size' => 12)
+        );
+
+        $vto = $lote ? $lote->getFecha()->add(new \DateInterval('P1Y'))->format('d/m/Y') : "*";
+
+        $section->addText("\n");
+
+        $section->addText("FECHA DE VENCIMIENTO:         ".$vto,
+            array('name' => 'Calibri', 'size' => 12)
+        );
+
+        $section->addText("\n");
+
+        $section->addText("DEFINICION:         ???????",
+            array('name' => 'Calibri', 'size' => 12)
+        );
+
+        $section->addText("\n");
+
+        $section->addText("DESCRIPCION:         ???????",
+            array('name' => 'Calibri', 'size' => 12)
+        );
+
+        $section->addText("\n");
+
+        $section->addText("CALIDAD:         ???????",
+            array('name' => 'Calibri', 'size' => 12)
+        );
+
+        $section->addText("\n");
+
+        $section->addText("PRESENTACION:         ???????",
+            array('name' => 'Calibri', 'size' => 12)
+        );
+
+        $section->addText("\n");
+
+        $section->addText("VIDA UTIL:         ???????",
+            array('name' => 'Calibri', 'size' => 12)
+        );
+
+        $section->addText("\n");
+
+        $section->addText("RNE:         ???????",
+            array('name' => 'Calibri', 'size' => 12)
+        );
+
+        $section->addText("\n");
+
+        $section->addText("RNPA:         ???????",
+            array('name' => 'Calibri', 'size' => 12)
+        );
+
+
+        // Saving the document as OOXML file...
+        $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
+
+
+        return $objWriter;
     }
-
-
-
 }
