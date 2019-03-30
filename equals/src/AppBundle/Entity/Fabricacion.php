@@ -7,6 +7,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpWord\PhpWord;
+use PhpOffice\PhpWord\IOFactory;
 
 
 /**
@@ -420,41 +422,30 @@ Jose Bonifacio 1191, CABA');
     }
 
     public function imprimirCoa() {
-        // Creating the new document...
+
+        /* Este debe ser un docx */
         $phpWord = new \PhpOffice\PhpWord\PhpWord();
+        
+        $phpWord->addFontStyle('myOwnStyle', array('name'=>'Calibri', 'size'=>12));
 
-        /* Note: any element you append to a document must reside inside of a Section. */
-
-        // Adding an empty Section to the document...
         $section = $phpWord->addSection();
+        $header = $section->addHeader();
+        $header->addImage('LogoEquals.jpeg', array('width' => 210, 'height' => 70, 'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER));
 
-        //LOGO
+        $footer = $section->addFooter();
+        $stylePreserve = array( 'bold' => true,'color' => '#70ad47','size' => 11, 'name' => 'Arial');
 
-        #reemplaza una variable con una imagen
-        $aImgs = 
-            array(
-            'img' => '',
-            'size' => array(200, 150),
-            'dataImg' => 'Logo'
-            )
-        ;
-
-
-        $section->addImage("/server/web/LogoEquals.jpeg", ["height" => 50, 'align' => 'center' ]);
-
-        $section->addText("\n");
-        $section->addText("\n");
-        $section->addText("\n");
+        $footer->addPreserveText('Azucena Villaflor 550 - C.A.B.A  Tel: 54 11 5775 0307',$stylePreserve, [ 'align' => 'center' ]);
+        $footer->addPreserveText('www.equals.com.ar',$stylePreserve,[ 'align' => 'center' ]);
 
         $table = $section->addTable([ 'align' => 'center' ]);
-        $table->addRow(300);
+        $table->addRow(400);
         // Add cells
         $fontStyleName = 'estiloTitulo';
         $phpWord->addFontStyle(
                 $fontStyleName,
-                array('name' => 'Tahoma', 'size' => 10, 'color' => '1B2232', 'bold' => true)
+                array('name' => 'Calibri', 'size' => 14, 'color' => '1B2232', 'bold' => true)
             );
-
 
         $styleCell =
         [
@@ -462,88 +453,101 @@ Jose Bonifacio 1191, CABA');
             'borderSize' => 9,
         ];
 
+        $estiloTexto = 'estiloTexto';
+        $phpWord->addFontStyle(
+                $estiloTexto,
+                array('name' => 'Calibri', 'size' => 12)
+            );        
+        $section->addText("");
         
+        $section->addText("\n");
+
         $table->addCell(9000,$styleCell)->addText('PROTOCOLO DE ANALISIS',$fontStyleName,[ 'align' => 'center' ]);
         
-        $section->addText("\n");
-
-        // Adding Text element with font customized inline...
         $section->addText("NOMBRE DEL PRODUCTO:         ".$this->getFormulaEnzimatica()->getProductoResultante()->getNombre(),
-            array('name' => 'Calibri', 'size' => 12)
+            $estiloTexto
         );
 
-        $section->addText("\n");
+        $section->addText("");
 
         $lote = $this->getLote()->first();
         $numero = $lote ? $lote->getNumero() : "*";
 
-        $section->addText("LOTE N°:         ".$numero,
-            array('name' => 'Calibri', 'size' => 12)
-        );
+        $section->addText("LOTE N°:         ".$numero, $estiloTexto);
 
-        $section->addText("\n");
+        $section->addText("");
         $elaboracion = $lote ? $lote->getFecha()->format('d/m/Y') : "*";
         
 
-        $section->addText("FECHA DE ELABORACION:         ".$elaboracion,
-            array('name' => 'Calibri', 'size' => 12)
-        );
+        $section->addText("FECHA DE ELABORACION:         ".$elaboracion, $estiloTexto);
 
         $vto = $lote ? $lote->getFecha()->add(new \DateInterval('P1Y'))->format('d/m/Y') : "*";
 
-        $section->addText("\n");
+        $section->addText("");
 
-        $section->addText("FECHA DE VENCIMIENTO:         ".$vto,
-            array('name' => 'Calibri', 'size' => 12)
-        );
+        $section->addText("FECHA DE VENCIMIENTO:         ".$vto, $estiloTexto );
 
-        $section->addText("\n");
+        $section->addText('');
+        $section->addText('');
+        $section->addText('DEFINICION: Mezcla enzimática, regulador para harinas de trigo.???',$estiloTexto);
+        $section->addText('');
+        $section->addText('DESCRIPCION: Polvo de color blanco-crema , con aroma y sabor característico.???',$estiloTexto);
+        $section->addText('');
+        $section->addText('CALIDAD : Apto para consumo humano ???',$estiloTexto);
+        $section->addText('');
+        $section->addText('PRESENTACION: Bolsa de papel multipliego con lámina de polietileno interior, contenido 25 kilogramos ???',$estiloTexto);
+        $section->addText('VIDA UTIL: 12 meses desde la fecha de elaboración. Almacenar en condiciones de humedad y temperatura adecuadas: 5°C a 25°C y hasta 65% HR ???',$estiloTexto);
+        $section->addText('');
+        $section->addText('RNE:     00000618 ???',$estiloTexto);
+        $section->addText('');
+        $section->addText('RNPA:    Exp. En trámite ???',$estiloTexto);
+        $section->addText('');
+        $section->addText('ESPECIFICACIONES TECNICAS:',$estiloTexto);
+        $section->addText('');
 
-        $section->addText("DEFINICION:         ???????",
-            array('name' => 'Calibri', 'size' => 12)
-        );
+        $rows = 5;
+        $cols = 3;
+        $table = $section->addTable(array('align' => 'center'));
+        
+        $styleCelda =
+        [
+            'borderColor' =>'#1F497D',
+            'borderSize' => 4,
+        ];
 
-        $section->addText("\n");
+        $table->addRow();
+        $table->addCell(2600,$styleCelda)->addText("ANALISIS",array('name' => 'Calibri', 'size' => 12, 'bold' => true, 'align' =>'center'));
+        $table->addCell(2600,$styleCelda)->addText("ESPECIFICACION",array('name' => 'Calibri', 'size' => 12, 'bold' => true, 'align' =>'center'));
+        $table->addCell(2600,$styleCelda)->addText("RESULTADO",array('name' => 'Calibri', 'size' => 12, 'bold' => true, 'align' =>'center') );
+        for ($r = 1; $r <= $rows; $r++) {
+            $table->addRow();
+            for ($c = 1; $c <= $cols; $c++) {
+                $table->addCell(2600,$styleCelda)->addText("??? ",$estiloTexto);
+            }
+        }
 
-        $section->addText("DESCRIPCION:         ???????",
-            array('name' => 'Calibri', 'size' => 12)
-        );
+        $section->addText('');
+        $section->addText('');
+        $section->addText('INFORMACION NUTRICIONAL APROXIMADA:',$estiloTexto);
+        $section->addText('');
+        $section->addText('Tamaño de Porción: 100g???',$estiloTexto);
+        $section->addText('');
+        $section->addText('Carbohidratos 74,1g (VD : 25%) ; Proteínas 9,1 g ( VD: 12%); Grasas Totales : 1,8 g (VD : 3%);
+            Grasas Saturadas 0g (VD : 0%); Fibra Alimentaria : 3 g (VD: 12%); Sodio : 0 mg 
+            (VD : 0%) ; Valor Energético : 349 kcal (VD : 17%)???',$estiloTexto);
+        $section->addText('');
+        $section->addText('(VD : % Valores diarios con base a una dieta de 2000 kcal u 8400 kJoule)????',$estiloTexto);
+        $section->addText('');
+        $section->addText('');
+        $section->addText('');
+        $section->addText('RESPONSABLE DEL CERTIFICADO:   ???????',$estiloTexto);
+        $section->addText('');
+        $section->addText('');
+        $section->addText('');
+        $section->addText('FECHA DE EMISION: ????(fecha en la que descargas el COA o fecha en la que se genero la fabricación?)',$estiloTexto);
 
-        $section->addText("\n");
-
-        $section->addText("CALIDAD:         ???????",
-            array('name' => 'Calibri', 'size' => 12)
-        );
-
-        $section->addText("\n");
-
-        $section->addText("PRESENTACION:         ???????",
-            array('name' => 'Calibri', 'size' => 12)
-        );
-
-        $section->addText("\n");
-
-        $section->addText("VIDA UTIL:         ???????",
-            array('name' => 'Calibri', 'size' => 12)
-        );
-
-        $section->addText("\n");
-
-        $section->addText("RNE:         ???????",
-            array('name' => 'Calibri', 'size' => 12)
-        );
-
-        $section->addText("\n");
-
-        $section->addText("RNPA:         ???????",
-            array('name' => 'Calibri', 'size' => 12)
-        );
-
-
-        // Saving the document as OOXML file...
-        $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
-
-
+        $objWriter = IOFactory::createWriter($phpWord, 'Word2007');
         return $objWriter;
+
     }
 }
