@@ -7,6 +7,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpWord\PhpWord;
+use PhpOffice\PhpWord\IOFactory;
 
 
 /**
@@ -412,11 +414,76 @@ Jose Bonifacio 1191, CABA');
 
     public function imprimirCoa() {
         /* Este debe ser un docx */
-        $spreadsheet = new Spreadsheet();
-        $sheet = $spreadsheet->getActiveSheet();
-     
-        $writer = new Xlsx($spreadsheet);
-        return $writer;
+        $phpWord = new \PhpOffice\PhpWord\PhpWord();
+        
+        $phpWord->addFontStyle('myOwnStyle', array('name'=>'Calibri', 'size'=>12));
+
+        $section = $phpWord->addSection();
+        $header = $section->addHeader();
+        $header->addImage('LogoEquals.jpeg', array('width' => 210, 'height' => 70, 'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER));
+
+        $footer = $section->addFooter();
+        $footer->addPreserveText('Azucena Villaflor 550 - C.A.B.A  Tel: 54 11 5775 0307');
+        $footer->addPreserveText('www.equals.com.ar');
+
+        $section = $phpWord->addSection();
+        $section->addText('');
+        $section->addText('NOMBRE DEL PRODUCTO:     E BALANCE ST86');
+        $section->addText('');
+        $section->addText('LOTE N°: 253');
+        $section->addText('');
+        $section->addText('FECHA DE ELABORACION:        29/11/2018');
+        $section->addText('FECHA DE VENCIMIENTO:        28/11/2019');
+        $section->addText('');
+        $section->addText('DEFINICION: Mezcla enzimática, regulador para harinas de trigo.');
+        $section->addText('');
+        $section->addText('DESCRIPCION: Polvo de color blanco-crema , con aroma y sabor característico.');
+        $section->addText('');
+        $section->addText('CALIDAD : Apto para consumo humano');
+        $section->addText('');
+        $section->addText('PRESENTACION: Bolsa de papel multipliego con lámina de polietileno interior, contenido 25 kilogramos');
+        $section->addText('VIDA UTIL: 12 meses desde la fecha de elaboración. Almacenar en condiciones de humedad y temperatura adecuadas: 5°C a 25°C y hasta 65% HR');
+        $section->addText('');
+        $section->addText('RNE:     00000618');
+        $section->addText('');
+        $section->addText('RNPA:    Exp. En trámite');
+        $section->addText('');
+        $section->addText('ESPECIFICACIONES TECNICAS:');
+        $section->addText('');
+
+        $rows = 5;
+        $cols = 3;
+        $table = $section->addTable();
+        for ($r = 1; $r <= $rows; $r++) {
+            $table->addRow();
+            for ($c = 1; $c <= $cols; $c++) {
+                $table->addCell(1750)->addText("Row {$r}, Cell {$c}");
+            }
+        }
+
+        $section->addText('');
+        $section->addText('');
+        $section->addText('INFORMACION NUTRICIONAL APROXIMADA:');
+        $section->addText('');
+        $section->addText('Tamaño de Porción: 100g');
+        $section->addText('');
+        $section->addText('Carbohidratos 74,1g (VD : 25%) ; Proteínas 9,1 g ( VD: 12%); Grasas Totales : 1,8 g (VD : 3%);
+            Grasas Saturadas 0g (VD : 0%); Fibra Alimentaria : 3 g (VD: 12%); Sodio : 0 mg 
+            (VD : 0%) ; Valor Energético : 349 kcal (VD : 17%)');
+        $section->addText('');
+        $section->addText('(VD : % Valores diarios con base a una dieta de 2000 kcal u 8400 kJoule)');
+        $section->addText('');
+        $section->addText('');
+        $section->addText('');
+        $section->addText('RESPONSABLE DEL CERTIFICADO:   Silvia Lopez');
+        $section->addText('');
+        $section->addText('');
+        $section->addText('');
+        $section->addText('FECHA DE EMISION: 03/12/2018');
+
+        $objWriter = IOFactory::createWriter($phpWord, 'Word2007');
+        return $objWriter;
+
     }
 
 
