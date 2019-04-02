@@ -360,6 +360,7 @@ class Fabricacion
 
         $objDrawing = new Drawing();
         $objDrawing->setPath('LogoEquals.jpeg');
+        $objDrawing->setResizeProportional(true);
         $objDrawing->setHeight(70)->setCoordinates('C13');
         $objDrawing->setWorksheet($sheet);
 
@@ -370,7 +371,7 @@ class Fabricacion
         $sheet->setCellValue('B3', $this->getFormulaEnzimatica()->getProductoResultante()->getNombre());
         $sheet->mergeCells('B3:B5');
 
-        $sheet->setCellValue('B6', $this->getFormulaEnzimatica()->getNombre());
+        $sheet->setCellValue('B6', 'Mejorador de harinas');
         $sheet->setCellValue('B7', 'USO INDUSTRIAL ALIMENTICIO');
 
 
@@ -384,14 +385,21 @@ class Fabricacion
 
         $elaboracion = $lote ? $lote->getFecha()->format('d/m/Y') : "*";
 
-        $vto = $lote ? $lote->getFecha()->add(new \DateInterval('P1Y'))->format('d/m/Y') : "*";
+        $vto = '*';
 
+        if ($lote) {
+            $vto = $lote->getVencimiento()->format('d/m/Y');
+        }
+
+        
         $sheet->setCellValue('B9', 'Fecha de elaboración: '.$elaboracion);
 
         $sheet->setCellValue('B10', 'Fecha de vencimiento: '.$vto);
-        $sheet->setCellValue('B11', $this->getCantidad().'Kg.');
 
-        $sheet->setCellValue('B12', 'Ingredientes: HARINA TERMOTRATADA ENRIQUECIDA*, ENZIMA XILANASA, MEJORADOR DE LA HARINA: INS 1100 *Harina enriquecida en los términos de la ley 25.630: Hierro 30.0 mg/kg, Tiamina 6.6mg/kg, Riboflavina 1.3 mg/kg, Nicotinamida 13.0 mg/kg y Acido Folico 2.2 mg/kg');
+        $sheet->setCellValue('B11', $this->getFormulaEnzimatica()->getProductoResultante()->getKilosPorBolsa().'Kg.');
+        
+
+        $sheet->setCellValue('B12', $this->getFormulaEnzimatica()->getProductoResultante()->getTextoIngredientes());
 
         $sheet->setCellValue('B13','Dirección: Blvd. Azucena Villaflor 450 8° Piso Depto.03 (C1107CIJ) Ciudad Autónoma de Buenos Aires.
             Tel.Oficina: (011)-5775-0307     Email: info@equals.com.ar    Web: www.equals.com.ar');
@@ -399,19 +407,19 @@ class Fabricacion
 
         $sheet->setCellValue('B16', 'Industria Argentina');
 
-        //second column
         $sheet->setCellValue('C3', 'ALMACENAR EN ENVASE CERRADO EN LUGAR FRESCO Y SECO');
         $sheet->mergeCells('C3:C4');
 
         $sheet->setCellValue('C5', 'Alergeno: Contiene gluten');
         $sheet->mergeCells('C5:C6');
 
-        $sheet->setCellValue('C7', 'Dosis de uso: 10 – 100 ppm');
+        $sheet->setCellValue('C7', $this->getFormulaEnzimatica()->getProductoResultante()->getTextoDosis());
+
         $sheet->mergeCells('C7:C8');
 
         $sheet->setCellValue('C9', 'RNE: 02-034.418');
 
-        $sheet->setCellValue('C10', 'R.N.P.A. 02-600536');
+        $sheet->setCellValue('C10', 'R.N.P.A. '.$this->getFormulaEnzimatica()->getProductoResultante()->getRnpa());
 
         $sheet->setCellValue('C12', 'Comercializado por:
 Equals S.A.
@@ -424,6 +432,7 @@ Jose Bonifacio 1191, CABA');
     public function imprimirCoa() {
 
         /* Este debe ser un docx */
+        //ACHICAR A UNA HOJA
         $phpWord = new \PhpOffice\PhpWord\PhpWord();
         
         $phpWord->addFontStyle('myOwnStyle', array('name'=>'Calibri', 'size'=>12));
@@ -458,18 +467,15 @@ Jose Bonifacio 1191, CABA');
                 $estiloTexto,
                 array('name' => 'Calibri', 'size' => 12)
             );        
-        $section->addText("");
         
-        $section->addText("\n");
-
         $table->addCell(9000,$styleCell)->addText('PROTOCOLO DE ANALISIS',$fontStyleName,[ 'align' => 'center' ]);
         
+        $section->addText("");
         $section->addText("NOMBRE DEL PRODUCTO:         ".$this->getFormulaEnzimatica()->getProductoResultante()->getNombre(),
             $estiloTexto
         );
 
-        $section->addText("");
-
+        
         $lote = $this->getLote()->first();
         $numero = $lote ? $lote->getNumero() : "*";
 
@@ -481,29 +487,32 @@ Jose Bonifacio 1191, CABA');
 
         $section->addText("FECHA DE ELABORACION:         ".$elaboracion, $estiloTexto);
 
-        $vto = $lote ? $lote->getFecha()->add(new \DateInterval('P1Y'))->format('d/m/Y') : "*";
+        $vto = '*';
 
-        $section->addText("");
+        if ($lote) {
+            $vto = $lote->getVencimiento()->format('d/m/Y');
+        }
+
 
         $section->addText("FECHA DE VENCIMIENTO:         ".$vto, $estiloTexto );
+        $section->addText("");
 
-        $section->addText('');
-        $section->addText('');
-        $section->addText('DEFINICION: Mezcla enzimática, regulador para harinas de trigo.???',$estiloTexto);
-        $section->addText('');
-        $section->addText('DESCRIPCION: Polvo de color blanco-crema , con aroma y sabor característico.???',$estiloTexto);
-        $section->addText('');
-        $section->addText('CALIDAD : Apto para consumo humano ???',$estiloTexto);
-        $section->addText('');
-        $section->addText('PRESENTACION: Bolsa de papel multipliego con lámina de polietileno interior, contenido 25 kilogramos ???',$estiloTexto);
-        $section->addText('VIDA UTIL: 12 meses desde la fecha de elaboración. Almacenar en condiciones de humedad y temperatura adecuadas: 5°C a 25°C y hasta 65% HR ???',$estiloTexto);
-        $section->addText('');
-        $section->addText('RNE:     00000618 ???',$estiloTexto);
-        $section->addText('');
-        $section->addText('RNPA:    Exp. En trámite ???',$estiloTexto);
-        $section->addText('');
+
+        $section->addText('DEFINICION: Mezcla enzimática, regulador para harinas de trigo.',$estiloTexto);
+        
+        $section->addText('DESCRIPCION: Polvo de color blanco-crema , con aroma y sabor característico.',$estiloTexto);
+        
+        $section->addText('CALIDAD : Apto para consumo humano.',$estiloTexto);
+        
+        $section->addText('PRESENTACION: Bolsa de papel multipliego con lámina de polietileno interior, contenido '.$this->getFormulaEnzimatica()->getProductoResultante()->getKilosPorBolsa().' kilogramos',$estiloTexto);
+
+        $section->addText('VIDA UTIL: 12 meses desde la fecha de elaboración. Almacenar en condiciones de humedad y temperatura adecuadas: 5°C a 25°C y hasta 65% HR.',$estiloTexto);
+        $section->addText("");
+        $section->addText('RNE:     00000618.',$estiloTexto);
+        
+        $section->addText('RNPA:    '.$this->getFormulaEnzimatica()->getProductoResultante()->getRnpa(),$estiloTexto);
+        $section->addText("");
         $section->addText('ESPECIFICACIONES TECNICAS:',$estiloTexto);
-        $section->addText('');
 
         $rows = 5;
         $cols = 3;
@@ -526,25 +535,16 @@ Jose Bonifacio 1191, CABA');
             }
         }
 
-        $section->addText('');
-        $section->addText('');
+        $section->addText("");
         $section->addText('INFORMACION NUTRICIONAL APROXIMADA:',$estiloTexto);
-        $section->addText('');
-        $section->addText('Tamaño de Porción: 100g???',$estiloTexto);
-        $section->addText('');
-        $section->addText('Carbohidratos 74,1g (VD : 25%) ; Proteínas 9,1 g ( VD: 12%); Grasas Totales : 1,8 g (VD : 3%);
-            Grasas Saturadas 0g (VD : 0%); Fibra Alimentaria : 3 g (VD: 12%); Sodio : 0 mg 
-            (VD : 0%) ; Valor Energético : 349 kcal (VD : 17%)???',$estiloTexto);
-        $section->addText('');
-        $section->addText('(VD : % Valores diarios con base a una dieta de 2000 kcal u 8400 kJoule)????',$estiloTexto);
-        $section->addText('');
-        $section->addText('');
-        $section->addText('');
-        $section->addText('RESPONSABLE DEL CERTIFICADO:   ???????',$estiloTexto);
-        $section->addText('');
-        $section->addText('');
-        $section->addText('');
-        $section->addText('FECHA DE EMISION: ????(fecha en la que descargas el COA o fecha en la que se genero la fabricación?)',$estiloTexto);
+        $section->addText('Tamaño de Porción: 100g',$estiloTexto);
+
+        $section->addText($this->getFormulaEnzimatica()->getProductoResultante()->getTextoIngredientes(),$estiloTexto);
+        $section->addText("");
+        $section->addText('(VD : % Valores diarios con base a una dieta de 2000 kcal u 8400 kJoule)',$estiloTexto);
+        $section->addText('RESPONSABLE DEL CERTIFICADO:   ',$estiloTexto);
+        $elaboracion = $lote ? $lote->getFecha()->format('d/m/Y') : "*";
+        $section->addText('FECHA DE EMISION: '.$elaboracion,$estiloTexto);
 
         $objWriter = IOFactory::createWriter($phpWord, 'Word2007');
         return $objWriter;

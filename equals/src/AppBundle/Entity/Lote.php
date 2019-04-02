@@ -333,4 +333,11 @@ class Lote
 
         return $cantidad;
     }
+
+    public function getVencimiento() {
+        $vto = $this->getFecha()->add(new \DateInterval('P1Y')); 
+        $vto = $vto->sub(new \DateInterval('P1D')); 
+
+        return $vto;
+    }
 }

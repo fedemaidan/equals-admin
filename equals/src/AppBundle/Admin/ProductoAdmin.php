@@ -54,6 +54,10 @@ class ProductoAdmin extends AbstractAdmin
             ->add('nombre')
             ->add('codigo')
             ->add('kilosPorBolsa')
+            ->add('rnpa')
+            ->add('textoDosis')
+            ->add('textoIngredientes')
+            
             
         ;
     }

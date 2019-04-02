@@ -49,6 +49,28 @@ class Producto
     private $lotes;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="textoIngredientes", type="string", length=4000, nullable=true)
+     */
+    private $textoIngredientes;
+
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="rnpa", type="string", length=255)
+     */
+    private $rnpa;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="textoDosis", type="string", length=255)
+     */
+    private $textoDosis;
+
+    /**
      * Get id
      *
      * @return int
@@ -190,5 +212,77 @@ class Producto
     public function getKilosPorBolsa()
     {
         return $this->kilosPorBolsa;
+    }
+
+    /**
+     * Set textoIngredientes
+     *
+     * @param string $textoIngredientes
+     *
+     * @return Producto
+     */
+    public function setTextoIngredientes($textoIngredientes)
+    {
+        $this->textoIngredientes = $textoIngredientes;
+
+        return $this;
+    }
+
+    /**
+     * Get textoIngredientes
+     *
+     * @return string
+     */
+    public function getTextoIngredientes()
+    {
+        return $this->textoIngredientes;
+    }
+
+    /**
+     * Set rnpa
+     *
+     * @param string $rnpa
+     *
+     * @return Producto
+     */
+    public function setRnpa($rnpa)
+    {
+        $this->rnpa = $rnpa;
+
+        return $this;
+    }
+
+    /**
+     * Get rnpa
+     *
+     * @return string
+     */
+    public function getRnpa()
+    {
+        return $this->rnpa;
+    }
+
+    /**
+     * Set textoDosis
+     *
+     * @param string $textoDosis
+     *
+     * @return Producto
+     */
+    public function setTextoDosis($textoDosis)
+    {
+        $this->textoDosis = $textoDosis;
+
+        return $this;
+    }
+
+    /**
+     * Get textoDosis
+     *
+     * @return string
+     */
+    public function getTextoDosis()
+    {
+        return $this->textoDosis;
     }
 }
