@@ -4,6 +4,11 @@ services:
         arguments:
             { container: @service_container, entityManager: "@doctrine.orm.entity_manager" }
 
+    eliminarAcciones_service:
+        class:     AppBundle\Service\EliminarAccionesService
+        arguments:
+            { container: @service_container, entityManager: "@doctrine.orm.entity_manager" }
+
     app.admin.producto:
         class: AppBundle\Admin\ProductoAdmin
         arguments: [~, AppBundle\Entity\Producto, SonataAdminBundle:CRUD]

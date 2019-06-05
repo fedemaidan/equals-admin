@@ -65,7 +65,7 @@ class Fabricacion
     private $faltantes;
 
     /**
-     * @var LoteFaltante
+     * @var Lote
      * @ORM\OneToMany(targetEntity="Lote", mappedBy="fabricacion",cascade={"persist"})
      */
     private $lote;

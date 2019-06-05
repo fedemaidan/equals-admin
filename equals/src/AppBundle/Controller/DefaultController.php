@@ -18,4 +18,18 @@ class DefaultController extends Controller
             'base_dir' => realpath($this->container->getParameter('kernel.root_dir').'/..'),
         ));
     }
+
+    /**
+     * @Route("/eliminarFabricacion", name="eliminarFabricacion")
+     */
+    public function eliminarFabricacionAction(Request $request)
+    {
+        $idFabricacion = $request->get("fabricacion_id");
+
+        $this->container->get("eliminarAcciones_service")->borrarFabricacion($idFabricacion);
+        die;
+        return $this->render('default/index.html.twig', array(
+            'base_dir' => realpath($this->container->getParameter('kernel.root_dir').'/..'),
+        ));
+    }
 }
