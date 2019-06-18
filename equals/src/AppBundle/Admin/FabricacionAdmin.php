@@ -71,4 +71,14 @@ class FabricacionAdmin extends AbstractAdmin
     {
         $this->getConfigurationPool()->getContainer()->get('adminLotes_service')->preInitFabricacion($fabricacion);
     }
+
+    public function postPersist($fabricacion)
+    {
+        $offset = 304-22; //PROXIMO NUMERO PEDIDO - ID EN EL MOMENTO EN EL QUE SE SOLICITO
+
+        $fabricacion->setNumero($offset+$fabricacion->getId());
+        
+        $this->getModelManager()->getEntityManager($this->getClass())->persist($fabricacion);
+        $this->getModelManager()->getEntityManager($this->getClass())->flush();
+    }
 }

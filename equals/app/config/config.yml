@@ -10,6 +10,7 @@ imports:
 # http://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: es
+    sonata.user.admin.user.class: Application\Sonata\UserBundle\Admin\UserAdmin
 
 framework:
     #esi:             ~

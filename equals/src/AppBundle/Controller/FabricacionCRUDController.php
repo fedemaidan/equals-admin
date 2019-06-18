@@ -6,6 +6,7 @@ use Sonata\AdminBundle\Controller\CRUDController as Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use AppBundle\Entity\Fabricacion;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class FabricacionCRUDController extends Controller
 {
@@ -35,7 +36,15 @@ class FabricacionCRUDController extends Controller
         }
 
         $this->addFlash('sonata_flash_success', 'La fabricación se confirmó con éxito');
-        if ($dashboard) return new RedirectResponse('/admin/dashboard');
+
+        if ($dashboard) {
+            $msg = "La fabricación se confirmó con éxito";
+            
+            return new JsonResponse([
+                    "success" => true,
+                    "message" => $msg
+                ]);
+        }
 
         return new RedirectResponse($this->admin->generateUrl('list', $this->admin->getFilterParameters()));
     }
@@ -64,13 +73,21 @@ class FabricacionCRUDController extends Controller
             }
         }
 
-        
-        $em->persist($fabricacion);
-        $em->flush();
+        if ($success) {       
+                $em->persist($fabricacion);
+                $em->flush();
+            }
 
         if ($success) $this->addFlash('sonata_flash_success', 'La fabricación se completó con éxito');
-        if ($dashboard) return new RedirectResponse('/admin/dashboard');
-
+        
+        if ($dashboard) {
+            $msg = $success ? "La fabricación se completó con éxito" : "Error";
+            
+            return new JsonResponse([
+                    "success" => $success,
+                    "message" => $msg
+                ]);
+        }
         return new RedirectResponse($this->admin->generateUrl('list', $this->admin->getFilterParameters()));
     }
 
@@ -78,7 +95,7 @@ class FabricacionCRUDController extends Controller
     {
         $fabricacion = $this->admin->getSubject();
         $doc = $fabricacion->imprimirOrden();
-        $filename = "Orden-".$fabricacion->getId().".xlsx";
+        $filename = "Orden Nº ".$fabricacion->getNumero()." ".$fabricacion->getFormulaEnzimatica()->getProductoResultante()->getNombre().".xlsx";
          
         $response =  new StreamedResponse(
             function () use ($doc) {
@@ -97,7 +114,7 @@ class FabricacionCRUDController extends Controller
     {
         $fabricacion = $this->admin->getSubject();
         $doc = $fabricacion->imprimirEtiqueta();
-        $filename = "Etiqueta-".$fabricacion->getId().".xlsx";
+        $filename = $fabricacion->getFormulaEnzimatica()->getProductoResultante()->getNombre()." (".$fabricacion->getNumero().") - etiqueta.xlsx";
          
         $response =  new StreamedResponse(
             function () use ($doc) {
@@ -116,7 +133,7 @@ class FabricacionCRUDController extends Controller
     {
         $fabricacion = $this->admin->getSubject();
         $doc = $fabricacion->imprimirCoa();
-        $filename = "Coa-".$fabricacion->getId().".docx";
+        $filename = $fabricacion->getFormulaEnzimatica()->getProductoResultante()->getNombre(). "LOTE ".$fabricacion->getNumero().".docx";
          
         $response =  new StreamedResponse(
             function () use ($doc) {

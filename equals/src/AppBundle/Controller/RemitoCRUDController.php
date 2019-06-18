@@ -6,6 +6,8 @@ use Sonata\AdminBundle\Controller\CRUDController as Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use AppBundle\Entity\Remito;
+use Symfony\Component\HttpFoundation\JsonResponse;
+
 
 class RemitoCRUDController extends Controller
 {
@@ -32,8 +34,16 @@ class RemitoCRUDController extends Controller
             $em->flush();
         }
 
-        if ($success) $this->addFlash('sonata_flash_success', 'El remito se confirmó con éxito');
-        if ($dashboard) return new RedirectResponse('/admin/dashboard');
+        if ($success)  $this->addFlash('sonata_flash_success', 'El remito '.$remito->getNumero().' se confirmó con éxito');
+
+        if ($dashboard) {
+            $msg = $success ? "El remito se confirmó con éxito" : "Falló la confirmación";
+            
+            return new JsonResponse([
+                    "success" => $success,
+                    "message" => $msg
+                ]);
+        }
 
         return new RedirectResponse($this->admin->generateUrl('list', $this->admin->getFilterParameters()));
     }
@@ -65,7 +75,15 @@ class RemitoCRUDController extends Controller
         $em->flush();
         
         if ($success) $this->addFlash('sonata_flash_success', 'El remito se completó con éxito');
-        if ($dashboard) return new RedirectResponse('/admin/dashboard');
+        
+        if ($dashboard) {
+            $msg = $success ? "El remito se confirmó con éxito" : "Falló la confirmación";
+            
+            return new JsonResponse([
+                    "success" => $success,
+                    "message" => $msg
+                ]);
+        }
 
         return new RedirectResponse($this->admin->generateUrl('list', $this->admin->getFilterParameters()));
     }
@@ -74,7 +92,7 @@ class RemitoCRUDController extends Controller
     {
         $remito = $this->admin->getSubject();
         $doc = $remito->imprimir();
-        $filename = "Remito-".$remito->getId().".xlsx";
+        $filename = "Remito Nº".$remito->getNumero()." ".$remito->getCliente()->getNombre().".xlsx";
          
         $response =  new StreamedResponse(
             function () use ($doc) {

@@ -41,6 +41,7 @@
                     <th>Producto</th>
                     <th>Kilos disponibles</th>
                     <th>Kilos reservados</th>
+                    <th></th>
                 </tr>
             </thead>
         </table>
@@ -76,6 +77,7 @@
         <table id="tableRemito" class="display" style="width:100%">
             <thead>
                 <tr>
+                    <th></th>
                     <th>Ultima modificacion</th>
                     <th>Número</th>
                     <th>Cliente</th>
@@ -151,6 +153,66 @@ function mostrarItems( items ) {
     return tabla;
 }
 
+function mostrarLotes( lotes ) {
+
+    
+    var tabla = '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">';
+
+    for (var i= 0;  i <  lotes.length; i++) {
+        
+        tabla += '<tr>'+
+            '<td>Fecha:</td>'+
+            '<td>'+lotes[i].fecha+'</td>'+
+            '<td>Nº:</td>'+
+            '<td>'+lotes[i].numero+'</td>'+
+            '<td>Disponible</td>'+
+            '<td>'+lotes[i].cantidadDisponible+'</td>'+
+        '</tr>'
+    }
+        
+    tabla += '</table>';
+    return tabla;
+}
+
+function confirmar(url,boton) {
+    console.log(url)
+    console.log(boton)
+    $.ajax({
+        url: url,
+        success: function(respuesta) {
+            console.log(respuesta)
+            if (respuesta.success) {
+                $("#"+boton).text("OK")
+            } else {
+                $("#"+boton).text("Error")
+            }
+        },
+        error: function() {
+            $("#"+boton).text("Error")
+            console.log("No se ha podido obtener la información");
+        }
+    });
+}
+
+function eliminar(url, elemento ) {
+     $.ajax({
+        url: url,
+        success: function(respuesta) {
+            console.log(respuesta)
+            if (respuesta.success) {
+                elemento.disabled = true
+                elemento.innerHTML = "OK"
+            } else {
+                elemento.innerHTML = "Fallo"
+            }
+        },
+        error: function() {
+            elemento.innerHTML = "Fallo"
+            console.log("No se ha podido obtener la información");
+        }
+    });
+}
+
 $(document).ready(function() {
         
     let urlStock = "{{ path('stock_list') }}"
@@ -183,7 +245,8 @@ $(document).ready(function() {
         }
     }
 
-    $('#tableStock').DataTable( {
+   
+    var tableStock = $('#tableStock').DataTable( {
         "processing": true,
         "serverSide": false,
         "paging": false,
@@ -196,6 +259,7 @@ $(document).ready(function() {
         "serverSide": false,
         "paging": false,
         "ajax": urlRemito,
+        "order": [[ 0, 'desc' ]],
         "lengthMenu": [[10, 20, -1], [10, 20, "Todos"]],
         "language": language
     } );
@@ -205,6 +269,7 @@ $(document).ready(function() {
         "serverSide": false,
         "ajax": urlFabricacion,
         "paging": false,
+        "order": [[ 0, 'desc' ]],
         "lengthMenu": [[10, 20, -1], [10, 20, "Todos"]],
         "language": language
     } );
@@ -214,12 +279,33 @@ $(document).ready(function() {
         "serverSide": false,
         "paging": false,
         "ajax": urlFaltante,
+        "order": [[ 0, 'desc' ]],
         "lengthMenu": [[10, 20, -1], [10, 20, "Todos"]],
         "language": language
     } );
 
     // Add event listener for opening and closing details
-    $('tbody').on('click', 'button.details-control', function () {
+    $('tbody').on('click', 'button.stock-control', function () {
+
+        var tr = $(this).closest('tr');
+        var row = tableStock.row( tr );
+ 
+        if ( row.child.isShown() ) {
+            // This row is already open - close it
+            row.child.hide();
+            tr.removeClass('shown');
+        }
+        else {
+            // Open this row
+            var lotes = row.data()[4]
+            
+            row.child( mostrarLotes(lotes) ).show();
+            tr.addClass('shown');
+        }
+    } );
+
+    // Add event listener for opening and closing details
+    $('tbody').on('click', 'button.remito-control', function () {
 
         var tr = $(this).closest('tr');
         var row = tableRemito.row( tr );
@@ -231,7 +317,7 @@ $(document).ready(function() {
         }
         else {
             // Open this row
-            var items = row.data()[5]
+            var items = row.data()[6]
             
             row.child( mostrarItems(items) ).show();
             tr.addClass('shown');

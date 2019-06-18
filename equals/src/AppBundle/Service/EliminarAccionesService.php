@@ -30,10 +30,6 @@ class EliminarAccionesService
         $this->em = $entityManager;
     }
 
-    const Pendiente = "pendiente";
-    const Inconsistente = "inconsistente";
-    const Fabricado = "fabricado";
-
     public function borrarFabricacion($idFabricacion) {
     	$fabricacion = $this->em->getRepository(Fabricacion::class)->findOneById($idFabricacion);
     	
@@ -46,6 +42,17 @@ class EliminarAccionesService
 
     	$this->borrar($fabricacion);
     	
+    }
+
+    public function borrarRemito($idRemito) {
+        $remito = $this->em->getRepository(Remito::class)->findOneById($idRemito);
+        
+        $this->borrarLotesAsignados($remito->getLoteAsignados(), $remito->getEstado());
+        $this->borrarLotesFaltantes($remito);
+        $this->borrarItemsRemitos($remito);
+
+        $this->borrar($remito);
+        
     }
     
     /*
@@ -62,9 +69,13 @@ class EliminarAccionesService
     			$loteReservado = $lote->getCantidadReservada();
 				$loteReservado -= $loteAsignado->getCantidad();
 				$lote->setCantidadReservada($loteReservado);
+
+                $loteDisponible = $lote->getCantidadDisponible();
+                $loteDisponible += $loteAsignado->getCantidad();
+                $lote->setCantidadDisponible($loteDisponible);
 	    	}
 
-	    	if ($estado == "fabricado") {
+	    	if ($estado == "fabricado" || $estado == "vendido") {
 	    		$loteDisponible = $lote->getCantidadDisponible();
 				$loteDisponible += $loteAsignado->getCantidad();
 				$lote->setCantidadDisponible($loteDisponible);
@@ -81,6 +92,13 @@ class EliminarAccionesService
     	foreach ($lotes as $key => $lote) {
     		$this->borrar($lote);
     	}
+    }
+
+    private function borrarItemsRemitos($remito) {
+        $items = $remito->getItemsRemito();
+        foreach ($items as $key => $item) {
+            $this->borrar($item);
+        }
     }
 
     private function borrar($elemento) {

@@ -43,6 +43,13 @@ class Fabricacion
     */
     private $estado;
 
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="numero", type="integer", nullable=true)
+     */
+    private $numero;
+
 
     /**
      * @var int
@@ -237,9 +244,9 @@ class Fabricacion
         $sheet->setCellValue('C9', date('d/m/Y'));
         $sheet->getColumnDimension('E')->setWidth(6);
         $sheet->setCellValue('E9', 'Lote N°');
-        if($this->getLote()->first()){
-            $sheet->setCellValue('F9', $this->getLote()->first()->getNumero());
-        }
+        //if($this->getLote()->first()){
+            $sheet->setCellValue('F9', $this->getNumero());
+        //}
         $sheet->setCellValue('G9', 'Cantidad Kg');
         $sheet->getColumnDimension('G')->setWidth(9);
         $sheet->setCellValue('H9', $this->getCantidad());
@@ -477,8 +484,10 @@ Jose Bonifacio 1191, CABA');
 
         
         $lote = $this->getLote()->first();
-        $numero = $lote ? $lote->getNumero() : "*";
+        //$numero = $lote ? $lote->getNumero() : "*";
+        $numero = $this->getNumero();
 
+        
         $section->addText("LOTE N°:         ".$numero, $estiloTexto);
 
         $section->addText("");
@@ -549,5 +558,29 @@ Jose Bonifacio 1191, CABA');
         $objWriter = IOFactory::createWriter($phpWord, 'Word2007');
         return $objWriter;
 
+    }
+
+    /**
+     * Set numero
+     *
+     * @param integer $numero
+     *
+     * @return Fabricacion
+     */
+    public function setNumero($numero)
+    {
+        $this->numero = $numero;
+
+        return $this;
+    }
+
+    /**
+     * Get numero
+     *
+     * @return integer
+     */
+    public function getNumero()
+    {
+        return $this->numero;
     }
 }
