@@ -63,9 +63,9 @@ class UserAdmin extends SonataUserAdmin
         $formMapper->removeGroup('Profile','User');
         $formMapper->removeGroup('Social','User');
         $formMapper->removeGroup('Keys','Security');
-        $formMapper->remove('email');
-        //$formMapper->add('email', 'email', ['pattern' => "^[A-Za-z0-9\.|-|_]*[@]{1}[A-Za-z0-9\.|-|_]*[.]{1}[a-z]{2,5}$",
-          //                                  'required' => false]);
+        //$formMapper->remove('email');
+        $formMapper->add('email', 'email', ['pattern' => "^[A-Za-z0-9\.|-|_]*[@]{1}[A-Za-z0-9\.|-|_]*[.]{1}[a-z]{2,5}$",
+                                            'required' => false]);
 
         
     }
