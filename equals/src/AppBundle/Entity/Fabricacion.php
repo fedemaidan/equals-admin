@@ -335,6 +335,9 @@ class Fabricacion
     public function imprimirEtiqueta() {
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
+        $sheet->getPageSetup()->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
+        $sheet->getPageSetup()->setHorizontalCentered(true);
+        $sheet->getPageSetup()->setVerticalCentered(true);
 
         //styles
         $this->setStyles($sheet, 'B3:C16', false, false, \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER, false);
@@ -360,7 +363,7 @@ class Fabricacion
         $this->setStyles($sheet, 'B16', false, 7, false, false);
         $this->setStyles($sheet, 'C3:C8', true, 6, false, false);
         $this->setStyles($sheet, 'C9:C10', false, 6, false, false);
-        $this->setStyles($sheet, 'C12', true, 10, false, false);
+        $this->setStyles($sheet, 'C12', true, 8, false, false);
         $sheet->getStyle('C12')->getFill()
           ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
           ->getStartColor()->setARGB('bfbfbf');
@@ -368,7 +371,9 @@ class Fabricacion
         $objDrawing = new Drawing();
         $objDrawing->setPath('LogoEquals.jpeg');
         $objDrawing->setResizeProportional(true);
-        $objDrawing->setHeight(70)->setCoordinates('C13');
+        $objDrawing->setHeight(50)->setCoordinates('C13');
+        $objDrawing->setOffsetX(6);
+        $objDrawing->setOffsetY(8);
         $objDrawing->setWorksheet($sheet);
 
         $this->dibujarBordes($sheet, 'B3:B16');
@@ -523,8 +528,6 @@ Jose Bonifacio 1191, CABA');
         $section->addText("");
         $section->addText('ESPECIFICACIONES TECNICAS:',$estiloTexto);
 
-        $rows = 5;
-        $cols = 3;
         $table = $section->addTable(array('align' => 'center'));
         
         $styleCelda =
@@ -537,13 +540,39 @@ Jose Bonifacio 1191, CABA');
         $table->addCell(2600,$styleCelda)->addText("ANALISIS",array('name' => 'Calibri', 'size' => 12, 'bold' => true, 'align' =>'center'));
         $table->addCell(2600,$styleCelda)->addText("ESPECIFICACION",array('name' => 'Calibri', 'size' => 12, 'bold' => true, 'align' =>'center'));
         $table->addCell(2600,$styleCelda)->addText("RESULTADO",array('name' => 'Calibri', 'size' => 12, 'bold' => true, 'align' =>'center') );
-        for ($r = 1; $r <= $rows; $r++) {
-            $table->addRow();
-            for ($c = 1; $c <= $cols; $c++) {
-                $table->addCell(2600,$styleCelda)->addText("??? ",$estiloTexto);
-            }
-        }
+        
+        //Fila 1
+        $table->addRow();
+        $table->addCell(2600,$styleCelda)->addText("Humedad",$estiloTexto);
+        $table->addCell(2600,$styleCelda)->addText("Máximo: 10%",$estiloTexto);
+        $table->addCell(2600,$styleCelda)->addText("Cumple",$estiloTexto);
 
+        //Fila 2
+        $table->addRow();
+        $table->addCell(2600,$styleCelda)->addText("Recuento de aerobios mesófilos",$estiloTexto);
+        $table->addCell(2600,$styleCelda)->addText("Máximo: 5 x 10000 UFC/g",$estiloTexto);
+        $table->addCell(2600,$styleCelda)->addText("Cumple",$estiloTexto);
+        
+        //Fila 3
+        $table->addRow();
+        $table->addCell(2600,$styleCelda)->addText("Recuento de hongos y levaduras",$estiloTexto);
+        $table->addCell(2600,$styleCelda)->addText("Máximo: 10 UFC/g",$estiloTexto);
+        $table->addCell(2600,$styleCelda)->addText("Cumple",$estiloTexto);
+
+        //Fila 4
+        $table->addRow();
+        $table->addCell(2600,$styleCelda)->addText("Recuento de E.coli",$estiloTexto);
+        $table->addCell(2600,$styleCelda)->addText("Ausencia en 1 gramo",$estiloTexto);
+        $table->addCell(2600,$styleCelda)->addText("Cumple",$estiloTexto);
+
+        //Fila 5
+        $table->addRow();
+        $table->addCell(2600,$styleCelda)->addText("Recuento de Coliformes totales",$estiloTexto);
+        $table->addCell(2600,$styleCelda)->addText("Máximo: 10 UFC/g",$estiloTexto);
+        $table->addCell(2600,$styleCelda)->addText("Cumple",$estiloTexto);
+
+        
+        
         $section->addText("");
         $section->addText('INFORMACION NUTRICIONAL APROXIMADA:',$estiloTexto);
         $section->addText('Tamaño de Porción: 100g',$estiloTexto);

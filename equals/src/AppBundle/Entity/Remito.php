@@ -200,6 +200,7 @@ class Remito
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
         $sheet->getColumnDimension('G')->setWidth(4);
+        $sheet->getColumnDimension('E')->setWidth(17.57);
         $sheet->setCellValue('G4', $this->getFechaCreacion()->format('d/m/Y'));
         $sheet->setCellValue('B9', $this->getCliente()->getNombre());
         $sheet->setCellValue('B11', $this->getCliente()->getDireccionFiscal());
@@ -207,12 +208,13 @@ class Remito
         $sheet->setCellValue('F13', $this->getCliente()->getCuit());
         $sheet->setCellValue('C15', $this->getCliente()->getDireccionEntrega());
         $sheet->setCellValue('B17', $this->getId());
-        $sheet->setCellValue('H17', $this->getOrdenDeCompra());
+        $sheet->setCellValue('G17', $this->getOrdenDeCompra());
         $sheet->mergeCells('G17:H17');
         $sheet->mergeCells('C15:H15');
         $sheet->mergeCells('G4:H4');
         $sheet->getRowDimension('3')->setRowHeight(37);
         $sheet->getStyle('B17')->getAlignment()->setHorizontal('left');
+        $sheet->getStyle('A21:B99')->getAlignment()->setHorizontal('center');
 
         $fila = 21;
 
