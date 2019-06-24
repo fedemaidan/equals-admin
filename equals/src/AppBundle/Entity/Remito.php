@@ -207,7 +207,6 @@ class Remito
         $sheet->setCellValue('B13', 'RESPONSABLE INSCRIPTO');
         $sheet->setCellValue('F13', $this->getCliente()->getCuit());
         $sheet->setCellValue('C15', $this->getCliente()->getDireccionEntrega());
-        $sheet->setCellValue('B17', $this->getId());
         $sheet->setCellValue('G17', $this->getOrdenDeCompra());
         $sheet->mergeCells('G17:H17');
         $sheet->mergeCells('C15:H15');
@@ -217,9 +216,9 @@ class Remito
         $sheet->getStyle('A21:B99')->getAlignment()->setHorizontal('center');
 
         $fila = 21;
-
+        $bultos = 0;
         foreach ($this->getItemsRemito() as $item) {
-            $sheet->setCellValue('A'.$fila, $item->getProducto()->getId());
+            $sheet->setCellValue('A'.$fila, $item->getProducto()->getCodigo());
             $sheet->setCellValue('B'.$fila, $item->getCantidad());
             $sheet->setCellValue('D'.$fila, $item->getProducto()->getNombre());
             foreach ($this->getLoteAsignados() as $lote) {
@@ -233,8 +232,13 @@ class Remito
                     $sheet->setCellValue('D'.$fila,$valor );
                 }
             }
+
+            $bultos += $item->getBolsas();
             $fila++;
         }
+
+        $sheet->setCellValue('B17', $bultos);
+        
 
         $writer = new Xlsx($spreadsheet);
         return $writer;

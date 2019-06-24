@@ -41,6 +41,11 @@ class ItemRemito
      */
     private $remito;
 
+    public function getBolsas() {
+        $bolsas = $this->cantidad / $this->getProducto()->getKilosPorBolsa();
+        return floor($bolsas) < $bolsas ? floor($bolsas) + 1 : $bolsas;
+    }
+
 
     /**
      * Get id
