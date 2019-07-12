@@ -9,6 +9,12 @@ services:
         arguments:
             { container: @service_container, entityManager: "@doctrine.orm.entity_manager" }
 
+    adminMovimientos_service:
+        class:     AppBundle\Service\AdminMovimiento
+        arguments:
+            { container: @service_container, entityManager: "@doctrine.orm.entity_manager" }
+
+
     app.admin.producto:
         class: AppBundle\Admin\ProductoAdmin
         arguments: [~, AppBundle\Entity\Producto, SonataAdminBundle:CRUD]
@@ -62,3 +68,12 @@ services:
         tags:
             - { name: sonata.admin, manager_type: orm, group: admin, label: Fabricacion }
         public: true
+
+    app.admin.movimiento:
+        class: AppBundle\Admin\MovimientoAdmin
+        arguments: [~, AppBundle\Entity\Movimiento, Sonata\AdminBundle\Controller\CRUDController]
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: admin, label: Movimiento }
+        public: true
+
+    

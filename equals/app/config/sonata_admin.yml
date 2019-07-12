@@ -33,6 +33,7 @@ sonata_admin:
                     - app.admin.proveedor
                     - app.admin.cliente
                     - app.admin.formula_enzimatica
+                    - app.admin.movimiento
             users_administration:
                 label: Usuarios
                 label_catalogue: messages

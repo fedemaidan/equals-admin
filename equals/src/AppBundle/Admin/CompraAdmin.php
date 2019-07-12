@@ -83,7 +83,8 @@ class CompraAdmin extends AbstractAdmin
     {
         foreach ($compra->getLotes() as $lote) {
             $lote->setCantidadDisponible($lote->getCantidadInicial());
-            $lote->setCompra($compra);   
+            $lote->setCompra($compra);
+            $this->getConfigurationPool()->getContainer()->get('adminMovimientos_service')->crearMovimientoCompra($lote);
         }
 
         $this->update($compra);

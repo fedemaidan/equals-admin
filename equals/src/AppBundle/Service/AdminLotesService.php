@@ -46,6 +46,9 @@ class AdminLotesService
                     $loteAsignado->setRemito($obj);
                 if ($tipo == "fabricacion")
                     $loteAsignado->setFabricacion($obj);
+
+                $this->container->get('adminMovimientos_service')->crearMovimientoEgreso($lote, $cantidadReservada, $tipo, $obj);
+
             }
 		}
 
@@ -108,6 +111,9 @@ class AdminLotesService
         $this->em->flush();
         $this->postLotePersist($lote);
         $this->em->flush();
+
+        $this->container->get('adminMovimientos_service')->crearMovimientoFabricacion($fabricacion);
+        
     }
 
     public function cantidadDisponibleDe($producto) {

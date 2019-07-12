@@ -7,6 +7,7 @@ use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Show\ShowMapper;
+use Sonata\Form\Type\DateTimePickerType;
 
 class LoteAdmin extends AbstractAdmin
 {
@@ -37,6 +38,7 @@ class LoteAdmin extends AbstractAdmin
             ->add('id')
             ->add('numero')
             ->add('producto')
+            ->add('fecha','datetime',array('date_format' => 'yyyy-MM-dd HH:mm:ss'))
             ->add('cantidadInicial')
             ->add('cantidadDisponible')
             ->add('_action', null, array(
@@ -62,12 +64,14 @@ class LoteAdmin extends AbstractAdmin
         }
 
         $formMapper
+            ->add('fecha', DateTimePickerType::class,array('date_format' => 'yyyy-MM-dd HH:mm:ss'))
             ->add('producto')
             ->add('cantidadInicial');
 
         if ($subject->getId() !== null) {
             $formMapper->add('cantidadDisponible');
         }
+
         $formMapper
             ->add('costo')
             ->add('compra')
