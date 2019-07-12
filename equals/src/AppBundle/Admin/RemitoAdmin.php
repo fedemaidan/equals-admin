@@ -13,8 +13,21 @@ use AppBundle\Form\ItemRemitoType;
 use AppBundle\Entity\Remito;
 use AppBundle\Entity\LoteFaltante;
 
+
 class RemitoAdmin extends AbstractAdmin
 {
+    protected $datagridValues = [
+
+        // display the first page (default = 1)
+        '_page' => 1,
+
+        // reverse order (default = 'ASC')
+        '_sort_order' => 'DESC',
+
+        // name of the ordered field (default = the model's id field, if any)
+        '_sort_by' => 'fecha',
+    ];
+
     protected function configureRoutes(RouteCollection $collection)
     {
         $collection->add('actuar', $this->getRouterIdParameter().'/actuar');
@@ -34,12 +47,12 @@ class RemitoAdmin extends AbstractAdmin
     protected function configureListFields(ListMapper $listMapper)
     {
         $listMapper
+            ->add('fechaCreacion','datetime',array('date_format' => 'yyyy-MM-dd'))
             ->add('numero')
             ->add('estado')
             ->add('cliente')
             ->add('faltantes')
             ->add('itemsRemito')
-            ->add('fechaModificacion')
             ->add('_action', null, [
                 'actions' => [
                     'actuar' => array(
