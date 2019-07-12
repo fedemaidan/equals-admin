@@ -40,7 +40,7 @@ class Remito
 
     /**
      * @var Lote
-     * @ORM\OneToMany(targetEntity="ItemRemito", mappedBy="remito",cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="ItemRemito", mappedBy="remito",cascade={"persist", "remove"})
      */
     private $itemsRemito;
 
@@ -63,15 +63,21 @@ class Remito
 
     /**
      * @var LoteFaltante
-     * @ORM\OneToMany(targetEntity="LoteFaltante", mappedBy="remito",cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="LoteFaltante", mappedBy="remito",cascade={"persist", "remove"})
      */
     private $faltantes;
 
     /**
      * @var LoteAsignado
-     * @ORM\OneToMany(targetEntity="LoteAsignado", mappedBy="remito",cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="LoteAsignado", mappedBy="remito",cascade={"persist", "remove"})
      */
     private $loteAsignados;
+
+    /**
+     * @var Lote
+     * @ORM\OneToMany(targetEntity="Movimiento", mappedBy="remito",cascade={"persist", "remove"})
+     */
+    private $movimientos;
 
     /**
      * Get id

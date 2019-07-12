@@ -26,12 +26,19 @@ class DefaultController extends Controller
     public function eliminarFabricacionAction(Request $request)
     {
         $idFabricacion = $request->get("fabricacion_id");
-
-        $this->container->get("eliminarAcciones_service")->borrarFabricacion($idFabricacion);
-        die;
-        return $this->render('default/index.html.twig', array(
-            'base_dir' => realpath($this->container->getParameter('kernel.root_dir').'/..'),
-        ));
+        $success = true;
+        $msg = "Fabricación eliminada";
+        try {
+            $this->container->get("eliminarAcciones_service")->borrarFabricacion($idFabricacion);
+         }
+        catch(\Exception $e) {
+            $success = false;
+            $msg = $e->getMessage();
+        }
+         return new JsonResponse([
+                    "success" => $success,
+                    "message" => $msg
+                ]);
     }
 
     /**
@@ -47,7 +54,7 @@ class DefaultController extends Controller
             $this->container->get("eliminarAcciones_service")->borrarRemito($idRemito);
         }
         catch(\Exception $e) {
-            $success = true;
+            $success = false;
             $msg = $e->getMessage();
         }
 

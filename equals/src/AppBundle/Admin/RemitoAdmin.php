@@ -56,9 +56,9 @@ class RemitoAdmin extends AbstractAdmin
             ->add('_action', null, [
                 'actions' => [
                     'actuar' => array(
-                        'template' => 'AppBundle:RemitoCRUD:actuar.html.twig'
+                        'template' => 'AppBundle:RemitoCRUD:actuar.html.twig',
                     ),
-                    'show' => []
+                    'show' => [],
                 ],
             ])
         ;

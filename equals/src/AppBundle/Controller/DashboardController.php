@@ -71,6 +71,7 @@ class DashboardController extends Controller
 
         foreach ($fabricaciones as $key => $fab) {
             $row = [];
+            $row[] = '<button type="button" class="btn btn-danger btn-sm" onclick="eliminar(\''.$this->generateUrl('eliminarFabricacion',["fabricacion_id"=> $fab->getId()]).'\',this)"><i class="glyphicon glyphicon-remove"></i></button>';
             $row[] = $fab->getFechaModificacion()->format('Y-m-d');;
             $row[] = count($fab->getLote()) > 0 ? $fab->getNumero(): $fab->getNumero().'(No creado aun)';
             $row[] = $fab->getCantidad();

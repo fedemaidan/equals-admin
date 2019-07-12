@@ -84,6 +84,14 @@ class Lote
      */
     private $fecha;
 
+
+    /**
+     * @var Lote
+     * @ORM\OneToMany(targetEntity="Movimiento", mappedBy="lote",cascade={"persist", "remove"})
+     */
+    private $movimientos;
+
+
     /**
      * Get id
      *

@@ -67,22 +67,27 @@ class Fabricacion
 
     /**
      * @var LoteFaltante
-     * @ORM\OneToMany(targetEntity="LoteFaltante", mappedBy="fabricacion",cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="LoteFaltante", mappedBy="fabricacion",cascade={"persist", "remove"})
      */
     private $faltantes;
 
     /**
      * @var Lote
-     * @ORM\OneToMany(targetEntity="Lote", mappedBy="fabricacion",cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="Lote", mappedBy="fabricacion",cascade={"persist", "remove"})
      */
     private $lote;
 
     /**
      * @var LoteAsignado
-     * @ORM\OneToMany(targetEntity="LoteAsignado", mappedBy="fabricacion",cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="LoteAsignado", mappedBy="fabricacion",cascade={"persist", "remove"})
      */
     private $loteAsignados;
 
+    /**
+     * @var Lote
+     * @ORM\OneToMany(targetEntity="Movimiento", mappedBy="fabricacion",cascade={"persist", "remove"})
+     */
+    private $movimientos;
 
 
     /**

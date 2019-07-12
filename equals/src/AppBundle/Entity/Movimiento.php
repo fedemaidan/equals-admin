@@ -51,7 +51,7 @@ class Movimiento
 
     /**
      * @var Remito
-     * @ORM\ManyToOne(targetEntity="Remito", cascade={"persist", "remove"})
+     * @ORM\ManyToOne(targetEntity="Remito", cascade={"persist"})
      * @ORM\JoinColumn(nullable=true)
      */
     private $remito;
