@@ -145,10 +145,10 @@ class Lote
 
     public function __toString()
     {
-        if ($this->getProducto())
+        if (strval($this->getNumero()) != "")
             return strval($this->getNumero());
         else 
-            return strval($this->getNumero());
+            return strval($this->getId());
     }
 
     /**
