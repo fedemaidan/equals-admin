@@ -31,7 +31,7 @@ class Compra
 
     /**
      * @var Lote
-     * @ORM\OneToMany(targetEntity="Lote", mappedBy="compra",cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="Lote", mappedBy="compra",cascade={"persist", "remove"})
      */
     private $lotes;
 
