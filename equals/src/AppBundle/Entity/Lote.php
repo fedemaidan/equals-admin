@@ -148,7 +148,7 @@ class Lote
         if (strval($this->getNumero()) != "")
             return strval($this->getNumero());
         else 
-            return "ID "+strval($this->getId());
+            return "ID ".strval($this->getId());
     }
 
     /**
