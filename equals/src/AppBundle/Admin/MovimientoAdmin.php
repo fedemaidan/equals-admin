@@ -10,7 +10,7 @@ use Sonata\AdminBundle\Show\ShowMapper;
 use Sonata\Form\Type\DateRangeType;
 use Sonata\Form\Type\DatePickerType;
 use Sonata\Form\Type\DateTimePickerType;
-
+use Sonata\DoctrineORMAdminBundle\Filter\DateRangeFilter;
 
 class MovimientoAdmin extends AbstractAdmin
 {
@@ -32,7 +32,7 @@ class MovimientoAdmin extends AbstractAdmin
             ->add('id')
             ->add('operacion')
             ->add('kilos')
-            ->add('fecha','doctrine_orm_date_range',array('date_format' => 'yyyy-MM-dd HH:mm:ss'))
+            ->add('fecha', DateRangeFilter::class, ['field_type' => DateRangeType::class])
             ->add('compra.proveedor',null,["label" => "Proveedor"])
             ->add('remito.numero',null,["label" => "Número de remito"])
             ->add('remito.cliente',null,["label" => "Cliente"])

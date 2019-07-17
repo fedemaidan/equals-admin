@@ -25,7 +25,7 @@ class RemitoAdmin extends AbstractAdmin
         '_sort_order' => 'DESC',
 
         // name of the ordered field (default = the model's id field, if any)
-        '_sort_by' => 'fecha',
+        '_sort_by' => 'fechaCreacion',
     ];
 
     protected function configureRoutes(RouteCollection $collection)

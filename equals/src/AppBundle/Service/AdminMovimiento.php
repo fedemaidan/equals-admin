@@ -54,8 +54,6 @@ class AdminMovimiento
         if ($tipo == "fabricacion")
         	$movimiento->setFabricacion($obj);
 
-        $this->em->persist($movimiento);
-   		$this->em->flush();
    	}
 
    	public function crearMovimiento($lote) {
