@@ -87,6 +87,7 @@ class LoteAdmin extends AbstractAdmin
             ->add('id')
             ->add('numero')
             ->add('cantidadInicial')
+            ->add('cantidadReservada')
             ->add('cantidadDisponible')
             ->add('costo')
             ->add('producto')
