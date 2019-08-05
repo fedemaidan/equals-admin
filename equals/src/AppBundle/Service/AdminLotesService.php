@@ -75,7 +75,7 @@ class AdminLotesService
 
     public function preInitFabricacion($fabricacion) {
         $ingredientes = $fabricacion->getFormulaEnzimatica()->getIngredientes();
-        
+        $estado = Fabricacion::Pendiente;
         foreach ($ingredientes as $ingre) {
             $cantidad = $ingre->getPorcentaje() * $fabricacion->getCantidad() / 100;
             $cantidad = $this->reservarLotesMasAntiguos($ingre->getProducto(), $cantidad, $fabricacion, 'fabricacion');
@@ -86,11 +86,11 @@ class AdminLotesService
                 $faltante->setCantidad($cantidad);
                 $faltante->setFabricacion($fabricacion);
                 $fabricacion->addFaltante($faltante);
-                $fabricacion->setEstado(Fabricacion::Inconsistente);
+                $estado = Fabricacion::Inconsistente;
             }
-            else
-                $fabricacion->setEstado(Fabricacion::Pendiente);
         }
+
+        $fabricacion->setEstado($estado);
     }
 
 
