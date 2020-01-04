@@ -9,6 +9,7 @@ use Symfony\Component\Console\Input\InputOption;
 use AppBundle\Entity\Fabricacion;
 use AppBundle\Entity\Remito;
 use AppBundle\Entity\Compra;
+use AppBundle\Entity\Lote;
 
 class BorrarAccionesCommand extends ContainerAwareCommand
 {
@@ -49,6 +50,15 @@ class BorrarAccionesCommand extends ContainerAwareCommand
         }
         
         $output->writeln('Compras borradas correctamente');
+
+        $lotes = $this->getContainer()->get('doctrine')->getManager()->getRepository(Lote::class)->findAll();
+
+        foreach ($lotes as $lote ) {
+            $this->getContainer()->get('doctrine')->getManager()->remove($lote);
+            $this->getContainer()->get('doctrine')->getManager()->flush();
+        }
+        
+        $output->writeln('Lotes borrados correctamente');
         
     }
 }
