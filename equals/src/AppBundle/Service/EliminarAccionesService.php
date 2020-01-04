@@ -38,7 +38,12 @@ class EliminarAccionesService
     	$this->borrarLotesFaltantes($fabricacion);
     	
     	if ($fabricacion->getEstado() == "fabricado") {	
-			$this->borrar($fabricacion->getLote()[0]);	
+            $lote = $fabricacion->getLote()[0];
+            $asignados = $this->em->getRepository(LoteAsignado::class)->findByLote($lote);
+            foreach ($asignados as $loteAs) {
+                $this->borrar($loteAs);
+            }
+			$this->borrar($lote);	
     	}
 
     	$this->borrar($fabricacion);
