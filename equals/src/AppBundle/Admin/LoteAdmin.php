@@ -69,7 +69,8 @@ class LoteAdmin extends AbstractAdmin
             ->add('cantidadInicial');
 
         if ($subject->getId() !== null) {
-            $formMapper->add('cantidadDisponible');
+            $formMapper->add('cantidadDisponible')
+            ->add('cantidadReservada');
         }
 
         $formMapper

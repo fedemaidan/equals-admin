@@ -10,6 +10,7 @@ use AppBundle\Entity\LoteFaltante;
 use AppBundle\Entity\Fabricacion;
 use AppBundle\Entity\Producto;
 use AppBundle\Entity\Remito;
+use AppBundle\Entity\Compra;
 
 class EliminarAccionesService
 {
@@ -55,6 +56,17 @@ class EliminarAccionesService
         
     }
     
+    public function borrarCompra($idCompra) {
+        $compra = $this->em->getRepository(Compra::class)->findOneById($idCompra);
+        
+        foreach ($compra->getLotes() as $lote) {
+            $this->borrar($lote);
+        }
+        
+        $this->borrar($compra);
+        
+    }
+
     /*
 		Por cada loteAccion debo re-asignarle la cantidad extraida previamente y para luego borrarlo
     */
