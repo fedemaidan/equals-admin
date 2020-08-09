@@ -26,11 +26,11 @@ class AdminMovimiento
         $this->em = $entityManager;
     }
 
-        
+
    	public function crearMovimientoCompra($lote) {
    		$movimiento = $this->crearMovimiento($lote);
    		$movimiento->setCompra($lote->getCompra());
-   		
+
         $this->em->persist($movimiento);
    		$this->em->flush();
    	}
@@ -52,8 +52,9 @@ class AdminMovimiento
         if ($tipo == "remito")
         	$movimiento->setRemito($obj);
         if ($tipo == "fabricacion")
-        	$movimiento->setFabricacion($obj);
+            $movimiento->setFabricacion($obj);
 
+        $this->em->persist($movimiento);
    	}
 
    	public function crearMovimiento($lote) {
